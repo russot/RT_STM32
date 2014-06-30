@@ -1,0 +1,116 @@
+/*
+   \file main.c
+   \brief Gray counter - osmibitovy na otestovani TiniLA analyzatoru
+   casovani v INTu, generace noveho bude v hlavni smycce, zaroven
+   zmerime, jak rychle to pojede
+
+   LED - PB5-7
+   Gray_Out - PB8-15
+   TBase_In - PA8-10
+
+   \ 2010-03-03 - prvni verze - LED pozice se musi upresnit a taky port na Graycode. A taky nejak nastavovat rychlost - zakladni bude 100kHz, nastavovanim zpomalit az na 1Hz - pomalejsi asi nema smysl
+
+*/
+
+//#include "stm32f10x.h"
+#include "stm32f10x_conf.h"
+#include "stm32f10x_usart.h"
+#include "stm32f10x_tim.h"
+#include "cmd_type.h"
+
+extern void tim3_daemon(void);
+extern void  tim3_init(void);
+#define LED_PORT GPIOB
+#define LED_PIN GPIO_Pin_8
+
+void  LED1_CONFIG(void){
+	//GPIOB->CRH = (GPIOB->CRH & 0xfffffff0) | 0x00000003; 	
+	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_Pin = LED_PIN;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(LED_PORT, &GPIO_InitStructure);
+
+	// PA7 as simulated clock for PA6(counter TIM3_ICH1)
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+
+} 
+/////////////////////////////////////////////////////////
+void LED1_OFF(void)
+{
+	GPIO_SetBits(LED_PORT,LED_PIN);
+	GPIO_SetBits(GPIOA,GPIO_Pin_7);
+
+}
+/////////////////////////////////////////////////////////
+void LED1_ON(void)
+{
+	GPIO_ResetBits(LED_PORT,LED_PIN); 
+	GPIO_ResetBits(GPIOA,GPIO_Pin_7); 
+}
+
+// LED bude na P.A0 - pro MiniSTM32 board
+//#define LED1_CONFIG() GPIOA_CRL = (GPIOA_CRL & 0xfffffff0) | 0x00000003;
+//#define LED1_OFF() GPIOA_BRR = 0x0001;
+//#define LED1_ON() GPIOA_BSRR = 0x0001;
+ErrorStatus HSEStartUpStatus;
+void RCC_Configuration_motor(void)
+{
+	RCC_APB2PeriphClockCmd(
+//			RCC_APB2Periph_GPIOA|\
+//			RCC_APB2Periph_GPIOB|\
+//			RCC_APB2Periph_GPIOC|\
+//			RCC_APB2Periph_GPIOD|\
+//			RCC_APB2Periph_GPIOF|
+			RCC_APB2Periph_AFIO, ENABLE);
+
+
+	/* Enable  USART2 USART3 USART4 USART5 TIM2 TIM3 USB clock */
+}
+void NVIC_Configuration_motor(void)
+{	 
+	NVIC_InitTypeDef NVIC_InitStructure;
+
+
+	/* Configure the NVIC Preemption Priority Bits */  
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
+
+	/* Enable the TIM3 Interrupt */
+	NVIC_InitStructure.NVIC_IRQChannel =TIM3_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+
+	/* Enable the EXTI4 Interrupt */
+
+
+}
+
+
+
+
+int hardware_init(void)
+{
+	RCC_Configuration_motor();
+	NVIC_Configuration_motor();
+	pwm_init();
+	tim3_init();
+	LED1_CONFIG();
+	adc_config();
+	rt_kprintf("ADC System initialized!\r\n");
+	
+	return  0;
+}
+
+
+
+
+
+
+/*********************************************************/
+

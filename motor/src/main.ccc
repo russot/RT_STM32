@@ -1,0 +1,433 @@
+/*
+   \file main.c
+   \brief Gray counter - osmibitovy na otestovani TiniLA analyzatoru
+   casovani v INTu, generace noveho bude v hlavni smycce, zaroven
+   zmerime, jak rychle to pojede
+
+   LED - PB5-7
+   Gray_Out - PB8-15
+   TBase_In - PA8-10
+
+   \ 2010-03-03 - prvni verze - LED pozice se musi upresnit a taky port na Graycode. A taky nejak nastavovat rychlost - zakladni bude 100kHz, nastavovanim zpomalit az na 1Hz - pomalejsi asi nema smysl
+
+*/
+
+//#include "stm32f10x.h"
+#include "stm32f10x_conf.h"
+#include "stm32f10x_usart.h"
+#include "stm32f10x_tim.h"
+
+extern void tim3_daemon(void);
+extern void  tim3_init(void);
+#define LED_PORT GPIOC
+#define LED_PIN GPIO_Pin_13
+
+void  LED1_CONFIG(void){
+	//GPIOB->CRH = (GPIOB->CRH & 0xfffffff0) | 0x00000003; 	
+	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_Pin = LED_PIN;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(LED_PORT, &GPIO_InitStructure);
+
+//	// PA7 as simulated clock for PA6(counter TIM3_ICH1)
+//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+//	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+//	GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+
+} 
+/////////////////////////////////////////////////////////
+void LED1_OFF(void)
+{
+	GPIO_SetBits(LED_PORT,LED_PIN);
+	//GPIO_SetBits(GPIOA,GPIO_Pin_7);
+
+}
+/////////////////////////////////////////////////////////
+void LED1_ON(void)
+{
+	GPIO_ResetBits(LED_PORT,LED_PIN); 
+	//GPIO_ResetBits(GPIOA,GPIO_Pin_7); 
+}
+
+// LED bude na P.A0 - pro MiniSTM32 board
+//#define LED1_CONFIG() GPIOA_CRL = (GPIOA_CRL & 0xfffffff0) | 0x00000003;
+//#define LED1_OFF() GPIOA_BRR = 0x0001;
+//#define LED1_ON() GPIOA_BSRR = 0x0001;
+ErrorStatus HSEStartUpStatus;
+void RCC_Configuration(void)
+{
+	/* RCC system reset(for debug purpose) */
+	RCC_DeInit();
+
+	/* Enable HSE */
+	RCC_HSEConfig(RCC_HSE_ON);
+
+	/* Wait till HSE is ready */
+	HSEStartUpStatus = RCC_WaitForHSEStartUp();
+
+	if(HSEStartUpStatus == SUCCESS)
+	{
+		/* HCLK = SYSCLK */
+		RCC_HCLKConfig(RCC_SYSCLK_Div1); 
+
+		/* PCLK2 = HCLK */
+		RCC_PCLK2Config(RCC_HCLK_Div1); 
+
+		/* PCLK1 = HCLK/2 */
+		RCC_PCLK1Config(RCC_HCLK_Div2);
+
+		/* ADCCLK = PCLK2/4 */
+		RCC_ADCCLKConfig(RCC_PCLK2_Div4); 
+
+		/* Flash 2 wait state */
+		FLASH_SetLatency(FLASH_Latency_2);
+		/* Enable Prefetch Buffer */
+		FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
+
+		/* PLLCLK = 8MHz * 9 = 72 MHz */
+		RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_9);
+
+		/* Enable PLL */ 
+		RCC_PLLCmd(ENABLE);
+
+		/* Wait till PLL is ready */
+		while(RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET)
+		{
+		}
+
+		/* Select PLL as system clock source */
+		RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
+
+		/* Wait till PLL is used as system clock source */
+		while(RCC_GetSYSCLKSource() != 0x08)
+		{
+		}
+	}
+
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
+
+	/* Enable ADC1 USART1  and GPIOA GPIOB GPIOC GPIOD AFIO clock */
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1|\
+			RCC_APB2Periph_USART1|\
+			RCC_APB2Periph_GPIOB|\
+			RCC_APB2Periph_GPIOC|\
+			RCC_APB2Periph_GPIOD|\
+			RCC_APB2Periph_GPIOF|\
+			RCC_APB2Periph_AFIO, ENABLE);
+
+
+	/* Enable  USART2 USART3 USART4 USART5 TIM2 TIM3 USB clock */
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3| RCC_APB1Periph_USB, ENABLE);
+}
+void NVIC_Configuration(void)
+{	 
+	NVIC_InitTypeDef NVIC_InitStructure;
+#ifdef  VECT_TAB_RAM  
+	/* Set the Vector Table base location at 0x20000000 */ 
+	NVIC_SetVectorTable(NVIC_VectTab_RAM, 0x0); 
+#else  /* VECT_TAB_FLASH  */
+	/* Set the Vector Table base location at 0x08000000 */ 
+	NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);   
+#endif
+
+	/* Configure the NVIC Preemption Priority Bits */  
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
+
+	/* Enable the USART1 Interrupt */
+	NVIC_InitStructure.NVIC_IRQChannel =USART1_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 6;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+	/* Enable the TIM2 Interrupt */
+	NVIC_InitStructure.NVIC_IRQChannel =TIM2_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 4;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);				
+
+	/* Enable the TIM3 Interrupt */
+	NVIC_InitStructure.NVIC_IRQChannel =TIM3_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+
+	/* Enable the EXTI3 Interrupt */
+	NVIC_InitStructure.NVIC_IRQChannel =EXTI15_10_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+
+	/* Enable the EXTI4 Interrupt */
+	NVIC_InitStructure.NVIC_IRQChannel =EXTI4_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+
+	NVIC_InitStructure.NVIC_IRQChannel =ADC1_2_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);				
+
+	NVIC_InitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 5;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);				
+
+}
+
+volatile int TIM2_ticked;
+enum {DOWN_=0,UP_ = 1,TOP_=1000,BOTTOM_= 0};
+void tick_led(void)
+{
+	static int ticks = 0;
+	static int direction = UP_;
+	if (direction == UP_){
+		ticks++;
+		if (ticks == TOP_)
+			direction = DOWN_;
+	}else{
+		ticks--;
+		if (ticks == BOTTOM_)
+			direction = UP_;	
+	}
+	TIM_SetCompare2(TIM2,ticks);
+	if((ticks % 2) == 0 ){
+		LED1_OFF();
+	}else{
+		LED1_ON();
+	}
+}
+
+void isr_tim2( void)
+{
+	TIM2_ticked = 1;
+	//     LED1_OFF();
+	//	TIM_ClearFlag(TIM2,TIM_FLAG_Update);
+	TIM2->SR &= ~(1<<0); // clear UIF flag
+	TIM_ClearFlag(TIM2,TIM_FLAG_Update);
+}
+
+
+
+void  tim2_init(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+	/*供给系统时钟*/
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+	TIM_DeInit(TIM2);//复位定时器2
+	TIM_TimeBaseStructure.TIM_Period = TOP_;
+	//设置了在下一个更新事件装入活动的自动重装载寄存器周期的值它的取值必须在0x0000 和0xFFFF 之间。 
+	TIM_TimeBaseStructure.TIM_Prescaler = 100;
+	//设置了用来作为 TIMx 时钟频率除数的预分频值，的取值必须在 0x0000 和0xFFFF 之间。
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0x0;//设置了时钟分割
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Down;
+	//选择了计数器模式，向上计数值
+	TIM_TimeBaseInit(TIM2,&TIM_TimeBaseStructure);
+	TIM_ClearFlag(TIM2,TIM_FLAG_Update);   
+	/*clear TIM2 update pending flag,  清除TIM2溢出中断标志*/
+	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);	/* TIM IT enable */ //打开溢   出中断
+
+
+	// PA1 as PWM output , controlled by TIM2 CH2
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+	TIM_OCInitTypeDef oc_init_struct;
+	oc_init_struct.TIM_OCIdleState  = TIM_OCIdleState_Reset;
+	oc_init_struct.TIM_OCMode       = TIM_OCMode_PWM1;
+	oc_init_struct.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
+	oc_init_struct.TIM_OCNPolarity  = TIM_OCNPolarity_High;
+	oc_init_struct.TIM_OCPolarity   = TIM_OCPolarity_High;
+	oc_init_struct.TIM_OutputNState = TIM_OutputNState_Enable;
+	oc_init_struct.TIM_OutputState  = TIM_OutputState_Enable;
+	oc_init_struct.TIM_Pulse        = 500;
+	TIM_OC2Init(TIM2,&oc_init_struct);
+	//	TIM2->CCMR1 &= 0xfcff;
+	//	TIM_SelectOCxM(TIM2, 2, TIM_OCMode_PWM1);
+	TIM_SetCompare2(TIM2,500);    // MUST Be >0, < 35999 in main.c
+	//	TIM_SetCompare1(TIM2,10000);
+	//	TIM_CCxCmd(TIM2,TIM_Channel_1,TIM_CCx_Enable); // TIM2->CC1 ENABLED
+	TIM_CCxCmd(TIM2,TIM_Channel_2,TIM_CCx_Enable); // TIM2->CC2 ENABLED
+
+
+	TIM_Cmd(TIM2, ENABLE);  //计数器使能，开始工作
+
+
+
+}
+
+
+
+
+void tim2_daemon(void)
+{
+	if (TIM2_ticked != 0){
+		TIM2_ticked = 0;
+		//tick_led();
+	}
+}
+
+extern void usart1_daemon(void);
+extern void usart_config(void);
+extern void isr_usart1(void);
+extern void CTR_LP(void);
+extern void isr_adc1(void);
+extern void adc_config(void);
+extern void adc1_daemon(void);
+extern void pwm_init(void);
+extern void isr_exti15(void);
+extern void isr_exti4(void);
+extern void isr_tim3( void);
+extern void exti_daemon( void);
+extern void usb_daemon( void);
+extern void usb_init(void);
+extern void USB_Istr(void);
+
+int main (void)
+{
+	RCC_Configuration();
+	NVIC_Configuration();
+	pwm_init();
+//	tim2_init();
+	tim3_init();
+	LED1_CONFIG();
+	usart_config();
+	//print_hex();
+	adc_config();
+	usb_init(); // USB Initialization
+
+	while(1) {
+		usart1_daemon();
+		tim2_daemon();
+		tim3_daemon();
+		exti_daemon();
+		usb_daemon();
+	}
+
+	return  0;
+}
+
+
+/*********************************************************/
+/***** inicializace po resetu *****/
+/*********************************************************/
+
+void isr_nmi( void)
+{
+	while(1);
+}
+
+void isr_hardfault( void)
+{
+	while(1);
+}
+
+void isr_dummy0( void)
+{
+	while(1);
+}
+
+extern unsigned long _etext;
+extern unsigned long _data;
+extern unsigned long _edata;
+extern unsigned long _bss;
+extern unsigned long _ebss;
+
+void isr_reset( void)
+{
+	unsigned long *pulSrc, *pulDest;
+
+	//
+	// Copy the data segment initializers from flash to SRAM.
+	//
+	pulSrc = &_etext;
+	for(pulDest = &_data; pulDest < &_edata; )
+	{
+		*pulDest++ = *pulSrc++;
+	}
+
+	//
+	// Zero fill the bss segment.
+	//
+	for(pulDest = &_bss; pulDest < &_ebss; )
+	{
+		*pulDest++ = 0;
+	}
+
+	main();
+}
+
+
+unsigned long *vector_table[64] __attribute__ ((section(".vectors"))) = {
+	(unsigned long *)0x20004fff,   /* Use 20 KB stack (0x5000 bytes). */
+	(unsigned long *)isr_reset,      /* Use main() as reset vector for now. */
+	(unsigned long *)isr_nmi,   /* nmi handler */
+	(unsigned long *)isr_hardfault,   /* hardfault handler */
+	(unsigned long *)isr_dummy0,      /* memmanage */
+	(unsigned long *)isr_dummy0,      /* busfault */
+	(unsigned long *)isr_dummy0,      /* usagefault */
+	(unsigned long *)isr_dummy0,      /* RESERVED */
+	(unsigned long *)isr_dummy0,      /* RESERVED */
+	(unsigned long *)isr_dummy0,      /* RESERVED */
+	(unsigned long *)isr_dummy0,      /* RESERVED */
+	(unsigned long *)isr_dummy0,      /* SVCall */
+	(unsigned long *)isr_dummy0,      /* Debug Monitor */
+	(unsigned long *)isr_dummy0,      /* RESERVED */
+	(unsigned long *)isr_dummy0,      /* Pending SV */
+	(unsigned long *)isr_dummy0,      /* SysTick timer */
+	/* a tady jsou STM32F interrupty z Referencniho Manualu */
+	(unsigned long *)isr_dummy0,      /* Watchdog */
+	(unsigned long *)isr_dummy0,      /* PVD through EXTI */
+	(unsigned long *)isr_dummy0,      /* Tamper */
+	(unsigned long *)isr_dummy0,      /* RTC */
+	(unsigned long *)isr_dummy0,      /* FLASH */
+	(unsigned long *)isr_dummy0,      /* RCC */
+	(unsigned long *)isr_dummy0,      /* EXTI0 */
+	(unsigned long *)isr_dummy0,      /* EXTI1 */
+	(unsigned long *)isr_dummy0,      /* EXTI2 */
+	(unsigned long *)isr_dummy0,      /* EXTI3 */
+	(unsigned long *)isr_exti4,     /* EXTI4 */
+	(unsigned long *)isr_dummy0,      /* DMA1 ch1 */
+	(unsigned long *)isr_dummy0,      /* DMA1 ch2 */
+	(unsigned long *)isr_dummy0,      /* DMA1 ch3 */
+	(unsigned long *)isr_dummy0,      /* DMA1 ch4 */
+	(unsigned long *)isr_dummy0,      /* DMA1 ch5 */
+	(unsigned long *)isr_dummy0,      /* DMA1 ch6 */
+	(unsigned long *)isr_dummy0,      /* DMA1 ch7 */
+	(unsigned long *)isr_dummy0,      /* ADC1_2 */
+	(unsigned long *)isr_dummy0,      /* USB/CAN TX */
+	(unsigned long *)USB_Istr,	/* USB/CAN RX0 */
+	(unsigned long *)isr_dummy0,      /* CAN RX1 */
+	(unsigned long *)isr_dummy0,      /* CAN SCE */
+	(unsigned long *)isr_dummy0,      /* EXTI[9:5] */
+	(unsigned long *)isr_dummy0,      /* TIM1 break */
+	(unsigned long *)isr_dummy0,      /* TIM1 update */
+	(unsigned long *)isr_dummy0,      /* TIM1 trigger/commutation */
+	(unsigned long *)isr_dummy0,      /* TIM1 capture/compare */
+	(unsigned long *)isr_tim2,      /* TIM2 */
+	(unsigned long *)isr_tim3,      /* TIM3 */
+	(unsigned long *)isr_dummy0,      /* TIM4 */
+	(unsigned long *)isr_dummy0,      /* I2C1 event */
+	(unsigned long *)isr_dummy0,      /* I2C1 error */
+	(unsigned long *)isr_dummy0,      /* I2C2 event */
+	(unsigned long *)isr_dummy0,      /* I2C2 error */
+	(unsigned long *)isr_dummy0,      /* SPI1 */
+	(unsigned long *)isr_dummy0,      /* SPI2 */
+	(unsigned long *)isr_usart1,      /* USART1 */
+	(unsigned long *)isr_dummy0,      /* USART2 */
+	(unsigned long *)isr_dummy0,      /* USART3 */
+	(unsigned long *)isr_exti15,      /* EXTI[10:15] */
+	(unsigned long *)isr_dummy0,      /*  */
+	(unsigned long *)isr_dummy0,      /*  */
+	(unsigned long *)isr_dummy0,      /*  */
+	(unsigned long *)isr_dummy0,      /*  */
+	(unsigned long *)isr_dummy0,      /*  */
+	(unsigned long *)isr_dummy0,      /*  */
+	(unsigned long *)isr_dummy0,      /*  */
+
+};

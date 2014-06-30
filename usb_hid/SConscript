@@ -1,0 +1,37 @@
+import rtconfig
+Import('RTT_ROOT')
+from building import *
+
+# get current directory
+cwd = GetCurrentDir()
+
+# The set of source files associated with this SConscript file.
+src = Split("""
+src/entry.c
+src/hw_config.c
+src/stm3210b_eval.c
+src/stm32_it.c
+src/usb_core.c
+src/usb_desc.c
+src/usb_endp.c
+src/usb_init.c
+src/usb_int.c
+src/usb_istr.c
+src/usb_mem.c
+src/usb_prop.c
+src/usb_pwr.c
+src/usb_regs.c
+src/usb_sil.c
+""")
+
+
+path = [cwd + '/STM32F10x_StdPeriph_Driver/inc', 
+    cwd + '/CMSIS/CM3/DeviceSupport/ST/STM32F10x',
+    cwd + '/inc']
+
+
+
+CPPDEFINES = ['USE_STDPERIPH_DRIVER', rtconfig.STM32_TYPE,'USE_STM3210B_EVAL','STM321XX_MD']
+group = DefineGroup('usb_hid', src, depend = [''], CPPPATH = path, CPPDEFINES = CPPDEFINES)
+
+Return('group')
