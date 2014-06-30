@@ -138,13 +138,23 @@ void data_t_sample(void)
 	int i;
 	int j;
 	uint32_t sum=0;
+	uint8_t channel=0;
+	uint8_t multi_flag=UNSET_;
+	if (gData.channel ==0 && gData.ADC_[1] < 0xfff){
+		channel =  1;
+		multi_flag = SET_;
+	else
+		channel = gData.channel;
+
 	for (i=0;i<buf_sz;i++){
-		filter_buffer[i] = gData.ADC_[gData.channel] & 0xfff; // sampling data from DMA-memory area gData.ADC_
+		filter_buffer[i] = gData.ADC_[channel] & 0xfff; // sampling data from DMA-memory area gData.ADC_
 		sum += filter_buffer[i];	
 		for(j=0;j<500;j++){;} // delay sometime for next sample
 	}
-	
-	gData.ADC_sample_group[gData.current].signal = sum / buf_sz;
+	if (multi_flag==SET_)
+		gData.ADC_sample_group[gData.current].signal = (sum / buf_sz) | (0x1<<15);
+	else
+		gData.ADC_sample_group[gData.current].signal = sum / buf_sz;
 //		if (    (gData.channel== 0) && NOT_OVER_FLOW(_A1) ){ // select current signal 
 //			gData.ADC_sample_group[gData.current].signal = (_A1 & 0xfff)| (0x1<<15); // set bit15 flag implying _A1 value
 //		}else{
