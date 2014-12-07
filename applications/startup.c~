@@ -58,7 +58,7 @@ void rtthread_startup(void)
 {
     /* init board */
     rt_hw_board_init();
-    usb_init();
+    //usb_init();
     /* show version */
     rt_show_version();
 

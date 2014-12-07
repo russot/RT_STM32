@@ -161,19 +161,19 @@ int rt_application_init(void)
 	rt_err_t result;
 
 	/* init led thread */
-	result = rt_thread_init(&led_thread,
-			"led",
-			led_thread_entry,
-			RT_NULL,
-			(rt_uint8_t*)&led_stack[0],
-			sizeof(led_stack),
-			20,
-			5);
-	if (result == RT_EOK)
-	{
-		rt_thread_startup(&led_thread);
-	}
-
+//	result = rt_thread_init(&led_thread,
+//			"led",
+//			led_thread_entry,
+//			RT_NULL,
+//			(rt_uint8_t*)&led_stack[0],
+//			sizeof(led_stack),
+//			20,
+//			5);
+//	if (result == RT_EOK)
+//	{
+//		rt_thread_startup(&led_thread);
+//	}
+//
 
 	
 	//starting event service routine

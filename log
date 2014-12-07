@@ -1,0 +1,66 @@
+./drivers/board.c:        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
+./drivers/dm9000a.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+./drivers/dm9000a.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
+./drivers/dm9000a.c:        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
+./drivers/ili_lcd_general.c:        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
+./drivers/ili_lcd_general.c:        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
+./drivers/led.c:    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
+./drivers/sdcard.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+./drivers/sdcard.c:    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
+./drivers/ssd1289.c:        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
+./drivers/ssd1289.c:        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
+./drivers/touch.c:        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+./drivers/touch.c:        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
+./drivers/touch.c:        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+./drivers/usart.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+./drivers/usart.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+./drivers/usart.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+./drivers/usart.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+./drivers/usart.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+./drivers/usart.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  assert_param(IS_GPIO_MODE(GPIO_InitStruct->GPIO_Mode));
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  currentmode = ((uint32_t)GPIO_InitStruct->GPIO_Mode) & ((uint32_t)0x0F);
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  if ((((uint32_t)GPIO_InitStruct->GPIO_Mode) & ((uint32_t)0x10)) != 0x00)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:        if (GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IPD)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:          if (GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IPU)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:        if (GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IPD)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:        if (GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IPU)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  GPIO_InitStruct->GPIO_Mode = GPIO_Mode_IN_FLOATING;
+./motor/src/adc.c:		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+./motor/src/adc.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+./motor/src/counter.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+./motor/src/counter.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+./motor/src/counter.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+./motor/src/ds18b02.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+./motor/src/ds18b02.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+./motor/src/pga.c:			GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+./motor/src/pwm.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+./motor/src/pwm.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+./motor/src/pwm.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+./motor/src/pwm.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+./motor/src/pwm.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+./motor/src/pwm.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+./motor/src/vout.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+./motor/src/vout.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+./motor/src/vout.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+./usb_hid/src/hw_config.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+./usb_hid/src/hw_config.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+./usb_hid/src/hw_config.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+./usb_hid/src/hw_config.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
+./usb_hid/src/hw_config.c:	//  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;  
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;  
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;
+./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;

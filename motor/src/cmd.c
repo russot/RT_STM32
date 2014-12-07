@@ -48,7 +48,6 @@ int flash(char *cmd)
 
 /**********************************************************/
 extern data_t gData;
-extern  __IO function_t gAdc[5];
 extern unsigned long _etext;
 #define FLASH_ADDR 0x08000000
 #define FLASH_SIZE 0x10000 //64K
@@ -92,6 +91,7 @@ int calib_srv(char *cmd)
 
 int motor_srv(char *cmd);
 int adc_srv(char *cmd);
+int vout_srv(char *cmd);
 /**********************************************************/
 function_t gF103[]= {
 	{"console",console_srv},
@@ -99,22 +99,31 @@ function_t gF103[]= {
 	{"calib",calib_srv},
 	{"motor",motor_srv},
 	{"adc",adc_srv},
+	{"vout",vout_srv},
 	{0,0},
 };
 
 
 int deal_cmd__(char* cmd_buffer,function_t* device );
-extern __IO function_t  gMotor[5];
 /**********************************************************/
+extern __IO function_t  gMotor[5];
 int motor_srv(char *cmd)
 {
 	return 	deal_cmd__(cmd, &gMotor[0]);
 }
 
 
+extern  __IO function_t gAdc[8];
 int adc_srv(char *cmd)
 {
 	return 	deal_cmd__(cmd, &gAdc[0]);
+}
+
+/**********************************************************/
+extern __IO function_t  gVout[4];
+int vout_srv(char *cmd)
+{
+	return 	deal_cmd__(cmd, &gVout[0]);
 }
 
 /**********************************************************/

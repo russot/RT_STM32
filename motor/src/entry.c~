@@ -42,11 +42,11 @@ int hardware_init(void)
 {
 	RCC_Configuration_motor();
 	NVIC_Configuration_motor();
-	tim3_init();
+	//tim3_init();
 	adc_config();
+	vout_init();
 	usb_init();
 	rt_kprintf("ADC System initialized!\r\n");
-    	sem_printf = rt_sem_create("sem", 1, RT_IPC_FLAG_FIFO);
 	
 	return  0;
 }

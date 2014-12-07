@@ -32,11 +32,11 @@ extern cmd_dealer_t gCmd_dealer;
 extern data_t gData;
 
 pwm_t gPWM1 ={
-	{GPIOB, GPIO_Pin_7},	// pwm out(TIM4.OC2) maps to GPIOB.Pin7
-	{GPIOB, GPIO_Pin_6},	// pwm dir maps to GPIOB.Pin6
-	{GPIOB, GPIO_Pin_4},	// pwm zero maps to GPIOB.Pin4
-	{GPIOA, GPIO_Pin_15},// pwm pollar maps to GPIOA.15
-	TIM4,	// TIM4.OC2 maps to GPIOB.Pin7
+	{GPIOB, GPIO_Pin_3},	// pwm out(TIM2.OC2) maps to GPIOB3
+	{GPIOB, GPIO_Pin_4},	// pwm dir maps to GPIOB4
+	{GPIOB, GPIO_Pin_6},	// pwm zero maps to GPIO6
+	{GPIOB, GPIO_Pin_7},// pwm pollar maps to GPIOB7
+	TIM2,	// TIM2.OC2 maps to GPIOB.Pin3
 	STOPPED,
 	UNSET_,
 	MIN_PULSE,
@@ -45,9 +45,9 @@ pwm_t gPWM1 ={
 /**********************************************************/
 void exti_init(void)
 {
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, DISABLE);
+	//RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, DISABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, DISABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 	EXTI_DeInit();
 	GPIO_InitTypeDef GPIO_InitStructure;
 	GPIO_InitStructure.GPIO_Pin = gPWM1.zero_pin.pin; //configure zero_pin 
@@ -159,7 +159,7 @@ __IO rt_uint8_t event_stack[ 512 ];
 __IO struct rt_thread event_thread;
 __IO void event_thread_entry(void* parameter)
 {
-	exti_init();
+	//exti_init();
 	pwm_init();
 	middle_status_update();
 	while (1){
@@ -192,9 +192,14 @@ void EXTI4_IRQHandler(void)
 	}
 }
 
-/**********************************************************/
 void  pwm_init(void) // use TIM4 as pwm
 {
+}
+/**********************************************************/
+void  pwm_init_(void) // use TIM4 as pwm
+{
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 	GPIO_InitTypeDef GPIO_InitStructure;
 	GPIO_InitStructure.GPIO_Pin = gPWM1.pwm_pin.pin;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
@@ -207,8 +212,8 @@ void  pwm_init(void) // use TIM4 as pwm
 	GPIO_Init(gPWM1.dir_pin.port, &GPIO_InitStructure);
 
 
+	GPIO_PinRemapConfig(GPIO_PartialRemap1_TIM2, ENABLE); // remap T2C2 to B3 as pwm_pin.pin
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure; /*供给系统时钟*/
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
        	TIM_DeInit(gPWM1.timer);//复位定时器4
 	TIM_TimeBaseStructure.TIM_Period = INIT_CIRCLE;
 	//设置了在下一个更新事件装入活动的自动重装载寄存器周期的值它的取值必须在0x0000 和0xFFFF 之间。 

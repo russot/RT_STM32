@@ -26,7 +26,7 @@ RT_USING_LCD_TYPE = 'SSD1289'
 
 if  CROSS_TOOL == 'gcc':
 	PLATFORM 	= 'gcc'
-	EXEC_PATH 	= 'F:/gcc-arm-embed/bin'
+	EXEC_PATH 	= 'J:/gcc-arm-embed/bin'
 elif CROSS_TOOL == 'keil':
 	PLATFORM 	= 'armcc'
 	EXEC_PATH 	= 'C:/Keil'
@@ -52,6 +52,7 @@ if PLATFORM == 'gcc':
     SIZE = PREFIX + 'size'
     OBJDUMP = PREFIX + 'objdump'
     OBJCPY = PREFIX + 'objcopy'
+    DASM = 'dasm.bat' 
 
     DEVICE = ' -mcpu=cortex-m3 -mthumb -ffunction-sections -fdata-sections'
     CFLAGS = DEVICE
@@ -67,7 +68,8 @@ if PLATFORM == 'gcc':
     else:
         CFLAGS += ' -O2'
 
-    POST_ACTION = OBJCPY + ' -O binary $TARGET rtthread.bin\n' + SIZE + ' $TARGET \n'
+
+    POST_ACTION = OBJCPY + ' -O binary $TARGET rtthread.bin\n' + SIZE + ' $TARGET \n' + DASM + '\n'
 
 elif PLATFORM == 'armcc':
     # toolchains

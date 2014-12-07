@@ -13,6 +13,9 @@ src/counter.c
 src/entry.c
 src/flash.c
 src/pwm.c
+src/vout.c
+src/pga.c
+src/ds18b20.c
 """)
 
 
@@ -22,7 +25,7 @@ path = [cwd + '/STM32F10x_StdPeriph_Driver/inc',
 
 
 
-CPPDEFINES = ['USE_STDPERIPH_DRIVER', rtconfig.STM32_TYPE]
+CPPDEFINES = ['USE_STDPERIPH_DRIVER', rtconfig.STM32_TYPE,'USE_STM3210B_EVAL']
 group = DefineGroup('motor', src, depend = [''], CPPPATH = path, CPPDEFINES = CPPDEFINES)
 
 Return('group')

@@ -1,4 +1,4 @@
-#define printf print2usb
+#define printf rt_kprintf
 enum {
 	UNSET_ = 0 ,
 	SET_  = 1,
@@ -94,5 +94,20 @@ typedef struct{
 	uint16_t pwm_circle ;
 } pwm_t;
 
+typedef struct{
+	port_pin_t swR_pin;
+} sw_t;
+
+typedef struct{
+	port_pin_t clk_pin;
+	port_pin_t dat_pin;
+} sp_port_t;
+
+typedef struct{
+	sp_port_t R;
+	sp_port_t A;
+	sp_port_t B;
+	sp_port_t SW;
+} pga_t;
 
 extern int cmd_dealer_init(void);

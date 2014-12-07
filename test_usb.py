@@ -82,7 +82,7 @@ class Serial_reader(threading.Thread):
 			except:
 				pass
 			if count == 4000:
-				break
+				pass
 		print "%d records runs for %d seconds"% (count, time.time() - begin)
 		print "%d 运行了%d秒 "% (count, time.time() - begin)
 

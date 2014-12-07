@@ -50,8 +50,11 @@ void TIM3_IRQHandler( void)
 
 
 
-
 void  tim3_init(void)
+{
+}
+
+void  tim3_init_(void)
 {
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 	/*供给系统时钟*/

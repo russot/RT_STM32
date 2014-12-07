@@ -42,8 +42,9 @@ int hardware_init(void)
 {
 	RCC_Configuration_motor();
 	NVIC_Configuration_motor();
-	tim3_init();
+	//tim3_init();
 	adc_config();
+	vout_init();
 	usb_init();
 	rt_kprintf("ADC System initialized!\r\n");
 	
