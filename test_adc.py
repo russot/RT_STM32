@@ -59,9 +59,9 @@ class Serial_writer(threading.Thread):
 		time.sleep(0.01)
 		print "swt R"
 		os.system("pause")
-		self.serial.write("adc:pga:R:240")
+		self.serial.write("adc:pga:R:12")
 		time.sleep(0.1)
-		self.serial.write("adc:pga:A:240")
+		self.serial.write("adc:pga:A:64")
 		time.sleep(0.1)
 		self.serial.write("adc:pga:B:240")
 		time.sleep(0.1)

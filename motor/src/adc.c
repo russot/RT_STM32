@@ -65,7 +65,8 @@ void data_t_service(void)
 
 void data_t_upload(void)
 {
-	printf(&(gData.str_buffer[0]));
+	//printf(&(gData.str_buffer[0]));
+	print2usb(&(gData.str_buffer[0]));
 }
 
 void data_t_run(char* cmd)
@@ -327,6 +328,8 @@ void RCC_ADC_init(void)
 	/* Enable ADC1 and GPIOC clock */
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB1Periph_USART2 | RCC_APB1Periph_TIM2 , DISABLE);
+	ADC_DeInit(ADC1);
+	RCC_ADCCLKConfig(RCC_PCLK2_Div6);
 
 }
 
@@ -339,12 +342,12 @@ void swR_init(void)
 	RCC_SW_init();
 	GPIO_InitTypeDef GPIO_InitStructure;
 	int i=0;
-	port_pin_t* pPin = (port_pin_t*) &gSW;
+	port_pin_t* pSWR = (port_pin_t*) &gSW;
 	/* Configure PC13/14/15 as swA1A2 swR swNTC */
-	GPIO_InitStructure.GPIO_Pin = pPin->pin;
+	GPIO_InitStructure.GPIO_Pin = pSWR->pin;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_Init(pPin->port, &GPIO_InitStructure);
+	GPIO_Init(pSWR->port, &GPIO_InitStructure);
 }
 void pga_init(void);
 ///////////////////////////////////////////////////////////////////////////////////
@@ -353,10 +356,29 @@ void GPIO_ADC_init(void)
 	GPIO_InitTypeDef GPIO_InitStructure;
 
 	/* Configure PA.0-3 (ADC Channel 0-3) as analog input -------------------------*/
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3|GPIO_Pin_4|GPIO_Pin_5;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	pga_init();
 	
@@ -401,7 +423,7 @@ void adc_config(void)
 	RCC_ADC_init();
 	GPIO_ADC_init();
 	DMA_ADC_init();
-	ds18b20_init(); // hook 1wire digit_thermo DS18B02 
+	//ds18b20_init(); // hook 1wire digit_thermo DS18B02 
 
 	// pga and switch init here
 	pga_init();
@@ -414,7 +436,7 @@ void adc_config(void)
 	ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
 	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
 	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
-	ADC_InitStructure.ADC_NbrOfChannel = 4;
+	ADC_InitStructure.ADC_NbrOfChannel = 6;
 	ADC_Init(ADC1, &ADC_InitStructure);
 
 	/* ADC1 regular channel 0 configuration */ 
@@ -422,8 +444,8 @@ void adc_config(void)
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 2, ADC_SampleTime_55Cycles5);
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_2, 3, ADC_SampleTime_55Cycles5);
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_3, 4, ADC_SampleTime_55Cycles5);
-	//ADC_RegularChannelConfig(ADC1, ADC_Channel_4, 5, ADC_SampleTime_55Cycles5);
-	//ADC_RegularChannelConfig(ADC1, ADC_Channel_5, 6, ADC_SampleTime_55Cycles5);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_4, 5, ADC_SampleTime_55Cycles5);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_5, 6, ADC_SampleTime_55Cycles5);
 
 	/* Enable ADC1 DMA */
 	ADC_DMACmd(ADC1, ENABLE);

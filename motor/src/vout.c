@@ -29,17 +29,17 @@
 
 #define INIT_CIRCLE 6000
 #define MIN_PULSE 2000
+
+port_pin_t vout={GPIOA,GPIO_Pin_8};
 ///////////////////////////////////////////////////////////////////////////////////
 void RCC_vout_init(void)
 {
 	/* Enable DMA clock */
 
 	/* Enable ADC1 and GPIOC clock */
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1|RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB , ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1|RCC_APB2Periph_AFIO, ENABLE);
 
 }
-int stable_time=1200;
 ///////////////////////////////////////////////////////////////////////////////////
 void GPIO_vout_init(void)
 {
@@ -47,20 +47,21 @@ void GPIO_vout_init(void)
 	//GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE); // remap to enable A15 as #CS 
 
 	/* Configure PA.0 (ADC Channel 0) as analog input -------------------------*/
-	GPIO_InitStructure.GPIO_Pin = VO_PIN ;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(VO_PORT, &GPIO_InitStructure);
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
 	
 }
+
 void t1c1_init()
 {
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure; /*供给系统时钟*/
-       	TIM_DeInit(TIM1);//复位定时器4
-	TIM_TimeBaseStructure.TIM_Period = INIT_CIRCLE ;
+       	TIM_DeInit(TIM1);//复位定时器1
 	//设置了在下一个更新事件装入活动的自动重装载寄存器周期的值它的取值必须在0x0000 和0xFFFF 之间。 
-	TIM_TimeBaseStructure.TIM_Prescaler = 30;
+	TIM_TimeBaseStructure.TIM_Period = INIT_CIRCLE ;
 	//设置了用来作为 TIMx 时钟频率除数的预分频值，的取值必须在 0x0000 和0xFFFF 之间。
+	TIM_TimeBaseStructure.TIM_Prescaler = 128;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0x0;//设置了时钟分割
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	//TIM_TimeBaseStructure.RepetitionCounter = 0;
@@ -68,19 +69,20 @@ void t1c1_init()
 	//选择了计数器模式，向上计数值
 	TIM_TimeBaseInit(TIM1,&TIM_TimeBaseStructure);
 	TIM_ARRPreloadConfig(TIM1,ENABLE);
-	TIM_ClearFlag(TIM1,TIM_FLAG_Update);   
+	//TIM_ClearFlag(TIM1,TIM_FLAG_Update);   
 
 	TIM_OCInitTypeDef oc_init_struct;
-	//oc_init_struct.TIM_OCIdleState  = TIM_OCIdleState_Reset;
+	oc_init_struct.TIM_OCIdleState  = TIM_OCIdleState_Reset;
+	oc_init_struct.TIM_OCNIdleState  = TIM_OCNIdleState_Reset;
 	oc_init_struct.TIM_OCMode       = TIM_OCMode_PWM1;
-	oc_init_struct.TIM_OCNPolarity  = TIM_OCNPolarity_High;
 	oc_init_struct.TIM_OCPolarity   = TIM_OCPolarity_High;
-	oc_init_struct.TIM_OutputNState = TIM_OutputNState_Enable;
+	oc_init_struct.TIM_OCNPolarity  = TIM_OCNPolarity_High;
 	oc_init_struct.TIM_OutputState  = TIM_OutputState_Enable;
+	oc_init_struct.TIM_OutputNState = TIM_OutputNState_Disable;
 	oc_init_struct.TIM_Pulse        = MIN_PULSE;
 	TIM_OC1Init(TIM1,&oc_init_struct);
-	TIM_OC1NPolarityConfig(TIM1,TIM_OCNPolarity_Low);
-	TIM_SetCompare1(TIM1,MIN_PULSE);    // MUST Be >0, < 35999 in main.c
+	//TIM_OC1NPolarityConfig(TIM1,TIM_OCNPolarity_Low);
+	//TIM_SetCompare1(TIM1,MIN_PULSE);    // MUST Be >0, < 35999 in main.c
 	TIM_CCxCmd(TIM1,TIM_Channel_1,TIM_CCx_Enable); // TIM2->CC2 ENABLED
 
 	TIM_Cmd(TIM1,ENABLE);
@@ -95,53 +97,6 @@ void vout_init(void){
 
 
 
-void delay(int ticks)
-{
-	for(;ticks>0;ticks--){}
-
-}
-
-
-//int write_reg(uint8_t value)
-//{
-//	rt_kprintf("vout writed..!\r\n");
-//	int i = 0;
-//	uint8_t command = 0x11;
-//	//CS enable
-//	GPIO_ResetBits(VO_PORT4CS, VO_CS);
-//	delay(stable_time);
-//	for (i=0;i<8;i++){
-//		GPIO_ResetBits(VO_PORT, VO_SCK);
-//		delay(stable_time);
-//		if (command&0x80){
-//			GPIO_SetBits(VO_PORT, VO_SI);
-//			delay(stable_time);
-//		}else{
-//			GPIO_ResetBits(VO_PORT, VO_SI);
-//			delay(stable_time);
-//		}
-//		GPIO_SetBits(VO_PORT, VO_SCK);
-//		delay(stable_time);
-//		command = command<<1;
-//	}
-//	for (i=0;i<8;i++){
-//		GPIO_ResetBits(VO_PORT, VO_SCK);
-//		delay(stable_time);
-//		if (value&0x80){
-//			GPIO_SetBits(VO_PORT, VO_SI);
-//			delay(stable_time);
-//		}else{
-//			GPIO_ResetBits(VO_PORT, VO_SI);
-//			delay(stable_time);
-//		}
-//		GPIO_SetBits(VO_PORT, VO_SCK);
-//		delay(stable_time);
-//		value = value<<1;
-//	}
-//	//CS disable
-//	GPIO_SetBits(VO_PORT4CS, VO_CS);
-//	delay(STABLE);
-//}
 
 int Vout_Value=MIN_PULSE;
 int vout_adj(int dir,int steps)

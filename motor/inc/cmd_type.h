@@ -91,7 +91,7 @@ typedef struct{
 	int running_flag;
 	int auto_flag;
 	uint16_t min_circle;
-	uint16_t pwm_circle ;
+	uint16_t pwm_circle 
 } pwm_t;
 
 typedef struct{

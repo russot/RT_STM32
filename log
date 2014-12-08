@@ -1,66 +1,104 @@
-./drivers/board.c:        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
-./drivers/dm9000a.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-./drivers/dm9000a.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
-./drivers/dm9000a.c:        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
-./drivers/ili_lcd_general.c:        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
-./drivers/ili_lcd_general.c:        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
-./drivers/led.c:    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
-./drivers/sdcard.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-./drivers/sdcard.c:    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
-./drivers/ssd1289.c:        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
-./drivers/ssd1289.c:        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
-./drivers/touch.c:        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-./drivers/touch.c:        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
-./drivers/touch.c:        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-./drivers/usart.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-./drivers/usart.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-./drivers/usart.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-./drivers/usart.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-./drivers/usart.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-./drivers/usart.c:    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  assert_param(IS_GPIO_MODE(GPIO_InitStruct->GPIO_Mode));
-./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  currentmode = ((uint32_t)GPIO_InitStruct->GPIO_Mode) & ((uint32_t)0x0F);
-./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  if ((((uint32_t)GPIO_InitStruct->GPIO_Mode) & ((uint32_t)0x10)) != 0x00)
-./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:        if (GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IPD)
-./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:          if (GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IPU)
-./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:        if (GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IPD)
-./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:        if (GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IPU)
-./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  GPIO_InitStruct->GPIO_Mode = GPIO_Mode_IN_FLOATING;
-./motor/src/adc.c:		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-./motor/src/adc.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
-./motor/src/counter.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-./motor/src/counter.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-./motor/src/counter.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-./motor/src/ds18b02.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-./motor/src/ds18b02.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-./motor/src/pga.c:			GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-./motor/src/pwm.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-./motor/src/pwm.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-./motor/src/pwm.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-./motor/src/pwm.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-./motor/src/pwm.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-./motor/src/pwm.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-./motor/src/vout.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-./motor/src/vout.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-./motor/src/vout.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-./usb_hid/src/hw_config.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-./usb_hid/src/hw_config.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-./usb_hid/src/hw_config.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-./usb_hid/src/hw_config.c:	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
-./usb_hid/src/hw_config.c:	//  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;  
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;  
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;
-./usb_hid/src/stm3210b_eval.c://  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_dbgmcu.c:  *     @arg DBGMCU_TIM1_STOP: TIM1 counter stopped when Core is halted          
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_dbgmcu.c:  *     @arg DBGMCU_TIM15_STOP: TIM15 counter stopped when Core is halted
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_dbgmcu.c:  *     @arg DBGMCU_TIM16_STOP: TIM16 counter stopped when Core is halted
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_dbgmcu.c:  *     @arg DBGMCU_TIM17_STOP: TIM17 counter stopped when Core is halted                
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_dbgmcu.c:  *     @arg DBGMCU_TIM10_STOP: TIM10 counter stopped when Core is halted
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_dbgmcu.c:  *     @arg DBGMCU_TIM11_STOP: TIM11 counter stopped when Core is halted
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_dbgmcu.c:  *     @arg DBGMCU_TIM12_STOP: TIM12 counter stopped when Core is halted
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_dbgmcu.c:  *     @arg DBGMCU_TIM13_STOP: TIM13 counter stopped when Core is halted
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_dbgmcu.c:  *     @arg DBGMCU_TIM14_STOP: TIM14 counter stopped when Core is halted
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  *     @arg GPIO_PartialRemap_TIM1      : TIM1 Partial Alternate Function mapping
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  *     @arg GPIO_FullRemap_TIM1         : TIM1 Full Alternate Function mapping
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  *     @arg GPIO_Remap_TIM15            : TIM15 Alternate Function mapping (only for Value line devices)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  *     @arg GPIO_Remap_TIM16            : TIM16 Alternate Function mapping (only for Value line devices)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  *     @arg GPIO_Remap_TIM17            : TIM17 Alternate Function mapping (only for Value line devices)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  *     @arg GPIO_Remap_TIM1_DMA         : TIM1 DMA requests mapping (only for Value line devices)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  *     @arg GPIO_Remap_TIM10            : TIM10 Alternate Function mapping (only for XL-density devices)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  *     @arg GPIO_Remap_TIM11            : TIM11 Alternate Function mapping (only for XL-density devices)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  *     @arg GPIO_Remap_TIM13            : TIM13 Alternate Function mapping (only for High density Value line and XL-density devices)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  *     @arg GPIO_Remap_TIM14            : TIM14 Alternate Function mapping (only for High density Value line and XL-density devices)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c:  *     @arg GPIO_Remap_TIM12            : TIM12 Alternate Function mapping (only for High density Value line devices)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_rcc.c:  *          RCC_APB2Periph_ADC2, RCC_APB2Periph_TIM1, RCC_APB2Periph_SPI1,
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_rcc.c:  *          RCC_APB2Periph_TIM15, RCC_APB2Periph_TIM16, RCC_APB2Periph_TIM17,
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_rcc.c:  *          RCC_APB2Periph_TIM9, RCC_APB2Periph_TIM10, RCC_APB2Periph_TIM11     
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_rcc.c:  *          RCC_APB1Periph_TIM12, RCC_APB1Periph_TIM13, RCC_APB1Periph_TIM14
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_rcc.c:  *          RCC_APB2Periph_ADC2, RCC_APB2Periph_TIM1, RCC_APB2Periph_SPI1,
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_rcc.c:  *          RCC_APB2Periph_TIM15, RCC_APB2Periph_TIM16, RCC_APB2Periph_TIM17,
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_rcc.c:  *          RCC_APB2Periph_TIM9, RCC_APB2Periph_TIM10, RCC_APB2Periph_TIM11  
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_rcc.c:  *          RCC_APB1Periph_TIM12, RCC_APB1Periph_TIM13, RCC_APB1Periph_TIM14  
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  if (TIMx == TIM1)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM1, ENABLE);
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM1, DISABLE);  
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  else if (TIMx == TIM10)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM10, ENABLE);
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM10, DISABLE);  
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  else if (TIMx == TIM11) 
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM11, ENABLE);
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM11, DISABLE);  
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  else if (TIMx == TIM12)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM12, ENABLE);
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM12, DISABLE);  
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  else if (TIMx == TIM13) 
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM13, ENABLE);
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM13, DISABLE);  
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  else if (TIMx == TIM14) 
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM14, ENABLE);
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM14, DISABLE);  
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  else if (TIMx == TIM15)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM15, ENABLE);
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM15, DISABLE);
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  else if (TIMx == TIM16)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM16, ENABLE);
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM16, DISABLE);
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:    if (TIMx == TIM17)
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:      RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM17, ENABLE);
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:      RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM17, DISABLE);
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  if((TIMx == TIM1) || (TIMx == TIM8)|| (TIMx == TIM2) || (TIMx == TIM3)||
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  if ((TIMx == TIM1) || (TIMx == TIM8)|| (TIMx == TIM15)|| (TIMx == TIM16) || (TIMx == TIM17))  
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  if((TIMx == TIM1) || (TIMx == TIM8)|| (TIMx == TIM15)||
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:     (TIMx == TIM16)|| (TIMx == TIM17))
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  if((TIMx == TIM1) || (TIMx == TIM8))
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  if((TIMx == TIM1) || (TIMx == TIM8))
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  if((TIMx == TIM1) || (TIMx == TIM8))
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  if((TIMx == TIM1) || (TIMx == TIM8) || (TIMx == TIM2) || (TIMx == TIM3) ||
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM9, TIM12 and TIM15 can have only TIM_IT_Update, TIM_IT_CC1,
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM10, TIM11, TIM13, TIM14, TIM16 and TIM17 can have TIM_IT_Update or TIM_IT_CC1.   
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM_IT_Break is used only with TIM1, TIM8 and TIM15. 
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM_IT_COM is used only with TIM1, TIM8, TIM15, TIM16 and TIM17.    
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM_EventSource_COM and TIM_EventSource_Break are used only with TIM1 and TIM8.      
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *          TIM_DMABase_DIER, TIM1_DMABase_SR, TIM_DMABase_EGR,
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM9, TIM12 and TIM15 can have only TIM_FLAG_Update, TIM_FLAG_CC1,
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM10, TIM11, TIM13, TIM14, TIM16 and TIM17 can have TIM_FLAG_Update or TIM_FLAG_CC1.   
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM_FLAG_Break is used only with TIM1, TIM8 and TIM15. 
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM_FLAG_COM is used only with TIM1, TIM8, TIM15, TIM16 and TIM17.    
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM9, TIM12 and TIM15 can have only TIM_FLAG_Update, TIM_FLAG_CC1,
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM10, TIM11, TIM13, TIM14, TIM16 and TIM17 can have TIM_FLAG_Update or TIM_FLAG_CC1.   
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM_FLAG_Break is used only with TIM1, TIM8 and TIM15. 
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM_FLAG_COM is used only with TIM1, TIM8, TIM15, TIM16 and TIM17.   
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM9, TIM12 and TIM15 can have only TIM_IT_Update, TIM_IT_CC1,
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM10, TIM11, TIM13, TIM14, TIM16 and TIM17 can have TIM_IT_Update or TIM_IT_CC1.   
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM_IT_Break is used only with TIM1, TIM8 and TIM15. 
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM_IT_COM is used only with TIM1, TIM8, TIM15, TIM16 and TIM17.  
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *     @arg TIM_IT_Update: TIM1 update Interrupt source
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM9, TIM12 and TIM15 can have only TIM_IT_Update, TIM_IT_CC1,
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM10, TIM11, TIM13, TIM14, TIM16 and TIM17 can have TIM_IT_Update or TIM_IT_CC1.   
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM_IT_Break is used only with TIM1, TIM8 and TIM15. 
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  *   - TIM_IT_COM is used only with TIM1, TIM8, TIM15, TIM16 and TIM17.    
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  if((TIMx == TIM1) || (TIMx == TIM8) || (TIMx == TIM2) || (TIMx == TIM3) ||
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  if((TIMx == TIM1) || (TIMx == TIM8) || (TIMx == TIM2) || (TIMx == TIM3) ||
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  if((TIMx == TIM1) || (TIMx == TIM8) || (TIMx == TIM2) || (TIMx == TIM3) ||
+./Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c:  if((TIMx == TIM1) || (TIMx == TIM8) || (TIMx == TIM2) || (TIMx == TIM3) ||
+./motor/src/vout.c:	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1|RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB , ENABLE);
+./motor/src/vout.c:       	TIM_DeInit(TIM1);//复位定时器4
+./motor/src/vout.c:	TIM_TimeBaseInit(TIM1,&TIM_TimeBaseStructure);
+./motor/src/vout.c:	TIM_ARRPreloadConfig(TIM1,ENABLE);
+./motor/src/vout.c:	TIM_ClearFlag(TIM1,TIM_FLAG_Update);   
+./motor/src/vout.c:	TIM_OC1Init(TIM1,&oc_init_struct);
+./motor/src/vout.c:	TIM_OC1NPolarityConfig(TIM1,TIM_OCNPolarity_Low);
+./motor/src/vout.c:	TIM_SetCompare1(TIM1,MIN_PULSE);    // MUST Be >0, < 35999 in main.c
+./motor/src/vout.c:	TIM_CCxCmd(TIM1,TIM_Channel_1,TIM_CCx_Enable); // TIM2->CC2 ENABLED
+./motor/src/vout.c:	TIM_Cmd(TIM1,ENABLE);
+./motor/src/vout.c:	TIM_CtrlPWMOutputs(TIM1,ENABLE);
+./motor/src/vout.c:	TIM_SetCompare1(TIM1,Vout_Value);    // MUST Be >0, < 35999 in main.c
+./motor/src/vout.c:	TIM_SetCompare1(TIM1,value);    // MUST Be >0, < 35999 in main.c
+./motor/src/vout.c:	//TIM_SetAutoreload(TIM1,  value);

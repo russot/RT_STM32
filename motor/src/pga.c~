@@ -30,6 +30,7 @@
 
 #define STABLE 8000
 
+int stable_time=1200;
 pga_t gPGA_ports={
 	{ {GPIOA,GPIO_Pin_6},	// R.clk
 	  {GPIOA,GPIO_Pin_7}	// R.dat
@@ -83,8 +84,14 @@ void pga_init(void){
 
 
 
-void delay(int ticks);
-extern int stable_time;
+void delay(int ticks)
+{
+	for(;ticks>0;ticks--){
+		asm("nop");
+	}
+
+}
+
 ///////////////////////////////////////////////////////////////////////////////////
 int write_sport(sp_port_t * pSPort, uint8_t value)
 {
