@@ -28,7 +28,7 @@
 #define STABLE 8000
 
 #define INIT_CIRCLE 6000
-#define MIN_PULSE 58
+#define MIN_PULSE 2000
 ///////////////////////////////////////////////////////////////////////////////////
 void RCC_vout_init(void)
 {
@@ -39,7 +39,6 @@ void RCC_vout_init(void)
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 
 }
-int Vout_Value=0;
 int stable_time=1200;
 ///////////////////////////////////////////////////////////////////////////////////
 void GPIO_vout_init(void)
@@ -64,15 +63,16 @@ void t1c1_init()
 	//设置了用来作为 TIMx 时钟频率除数的预分频值，的取值必须在 0x0000 和0xFFFF 之间。
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0x0;//设置了时钟分割
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	//TIM_TimeBaseStructure.RepetitionCounter = 0;
 	//TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Down;
 	//选择了计数器模式，向上计数值
 	TIM_TimeBaseInit(TIM1,&TIM_TimeBaseStructure);
+	TIM_ARRPreloadConfig(TIM1,ENABLE);
 	TIM_ClearFlag(TIM1,TIM_FLAG_Update);   
 
 	TIM_OCInitTypeDef oc_init_struct;
-	oc_init_struct.TIM_OCIdleState  = TIM_OCIdleState_Reset;
+	//oc_init_struct.TIM_OCIdleState  = TIM_OCIdleState_Reset;
 	oc_init_struct.TIM_OCMode       = TIM_OCMode_PWM1;
-	oc_init_struct.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
 	oc_init_struct.TIM_OCNPolarity  = TIM_OCNPolarity_High;
 	oc_init_struct.TIM_OCPolarity   = TIM_OCPolarity_High;
 	oc_init_struct.TIM_OutputNState = TIM_OutputNState_Enable;
@@ -82,6 +82,9 @@ void t1c1_init()
 	TIM_OC1NPolarityConfig(TIM1,TIM_OCNPolarity_Low);
 	TIM_SetCompare1(TIM1,MIN_PULSE);    // MUST Be >0, < 35999 in main.c
 	TIM_CCxCmd(TIM1,TIM_Channel_1,TIM_CCx_Enable); // TIM2->CC2 ENABLED
+
+	TIM_Cmd(TIM1,ENABLE);
+	TIM_CtrlPWMOutputs(TIM1,ENABLE);
 }
 
 void vout_init(void){
@@ -140,6 +143,7 @@ void delay(int ticks)
 //	delay(STABLE);
 //}
 
+int Vout_Value=MIN_PULSE;
 int vout_adj(int dir,int steps)
 {
 	if (dir == DIR_PLUS)
@@ -179,6 +183,7 @@ int vout_set(char* cmd)// set minimum circle to aoid speed_lost
 	uint16_t steps;
 	value = atoi(cmd);
 	TIM_SetCompare1(TIM1,value);    // MUST Be >0, < 35999 in main.c
+	Vout_Value=value;
 	//TIM_SetAutoreload(TIM1,  value);
 	return 1;
 }
