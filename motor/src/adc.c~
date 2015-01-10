@@ -17,11 +17,17 @@
 #include "stm32f10x_adc.h"
 #include <string.h>
 #include "cmd_type.h"
-
-
+#define SW_R	0
+#define SW_UI 	1
+#define SW_NTC 	2
+#define SW_CAN	3
+#define SW_232	4
+#define SW_485 	5
+int gSW_status = SW_R;
 extern pga_t gPGA_ports;
 int write_sport(sp_port_t * pSPort, uint8_t value);
 void data_t_init(void);
+int gThermo_flag=UNSET_;
 data_t gData;
 sw_t gSW={
 	{GPIOC, GPIO_Pin_15}	// swR_pin
@@ -65,7 +71,8 @@ void data_t_service(void)
 
 void data_t_upload(void)
 {
-	printf(&(gData.str_buffer[0]));
+	//printf(&(gData.str_buffer[0]));
+	print2usb(&(gData.str_buffer[0]));
 }
 
 void data_t_run(char* cmd)
@@ -114,16 +121,15 @@ void data_t_set_channel(char* cmd)
 	gData.channel = atoi(cmd); // delay for speeding up
 }
 
+char SW_status=0x0e;
 void set_SW(char index, char value)
 {
 	// switch3 status stored below
-	static char SW_status=0x0e;
 	if (value == SET_){
 		SW_status |= 0x1<<index;
 	}else{
 		SW_status &= ~(0x1<<index);
 	}
-	write_sport(&gPGA_ports.SW,SW_status);
 }
 
 #define set_R_on()	 GPIO_ResetBits(gSW.swR_pin.port,gSW.swR_pin.pin)
@@ -141,18 +147,24 @@ void switch_485(void)
 	set_COM_on();
 	set_CAN_off();
 	set_232_off();
+	write_sport(&gPGA_ports.SW,SW_status);
+	gSW_status = SW_485;
 }
 void switch_232(void)
 {
 	set_COM_on();
 	set_CAN_off();
 	set_232_on();
+	write_sport(&gPGA_ports.SW,SW_status);
+	gSW_status = SW_232;
 }
 void switch_CAN(void)
 {
 	set_COM_on();
 	set_232_off();
 	set_CAN_on();
+	write_sport(&gPGA_ports.SW,SW_status);
+	gSW_status = SW_CAN;
 }
 void switch_NTC(void)
 {
@@ -160,6 +172,8 @@ void switch_NTC(void)
 	set_CAN_off();
 	set_232_off();
 	set_NTC_on();
+	write_sport(&gPGA_ports.SW,SW_status);
+	gSW_status = SW_NTC;
 }
 void switch_R(void)
 {
@@ -168,6 +182,8 @@ void switch_R(void)
 	set_232_off();
 	set_NTC_off();
 	set_R_on();
+	write_sport(&gPGA_ports.SW,SW_status);
+	gSW_status = SW_R;
 }
 void switch_UI(void)
 {
@@ -176,6 +192,8 @@ void switch_UI(void)
 	set_232_off();
 	set_NTC_off();
 	set_R_off();
+	write_sport(&gPGA_ports.SW,SW_status);
+	gSW_status = SW_UI;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -467,14 +485,46 @@ void adc_config(void)
 
 }
 
-
 void get_temp(void)
 {
-	int temp;
-	char *str = &(gData.str_buffer[3]);
-	temp = get_temp_();
-	sprintf( str, "%04x", temp);
-	printf(&(gData.str_buffer[0]));
+
+	gThermo_flag=SET_;
+}
+
+
+void sample_temp(void)
+{
+
+	int PT,NTC,status;
+	char str_buffer[64];
+	if ( gThermo_flag==UNSET_)
+		return
+	gThermo_flag=UNSET_;
+	status = gSW_status;
+	switch_NTC();
+ 	/*Warning: sleep 1ms to be stable */
+	rt_thread_delay( RT_TICK_PER_SECOND/1000);
+	PT  = gData.ADC_[3];
+	NTC = gData.ADC_[0];
+	//format:0t:NNNNPPPP
+	sprintf(str_buffer, "0t:%04x%04x",NTC,PT);
+	print2usb(str_buffer);
+	//printf(str_buffer);
+	//return to origin status
+	if (status == SW_R)
+		switch_R();
+	else if (status == SW_UI)
+		switch_UI();
+	else if (status == SW_NTC)
+		switch_NTC();
+	else if (status == SW_CAN)
+		switch_CAN();
+	else if (status == SW_485)
+		switch_485();
+	else if (status == SW_232)
+		switch_232();
+	else
+		switch_R();
 }
 
 
@@ -499,6 +549,7 @@ __IO void ad_sample_thread_entry(void* parameter)
 	while (1){
 		if( gData.running_flag == SET_)
 			gData.sample();
+			sample_temp();
 		rt_thread_delay( gData.delay); /* sleep 0.5 second and switch to other thread */
 	}
 }

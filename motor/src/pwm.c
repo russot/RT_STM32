@@ -61,41 +61,41 @@ void exti_init(void)
 	GPIO_Init(gPWM1.pollar_pin.port, &GPIO_InitStructure);
 
 
-	EXTI_InitTypeDef EXTI_InitStruct;
-	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB,GPIO_PinSource4);
-	EXTI_InitStruct.EXTI_Line = EXTI_Line4;
-	EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
-	EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
-	EXTI_InitStruct.EXTI_LineCmd = ENABLE;
-	EXTI_Init(&EXTI_InitStruct);
-
-	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA,GPIO_PinSource15);
-	EXTI_InitStruct.EXTI_Line = EXTI_Line15;
-	EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
-	EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
-	EXTI_InitStruct.EXTI_LineCmd = ENABLE;
-	EXTI_Init(&EXTI_InitStruct);
+//	EXTI_InitTypeDef EXTI_InitStruct;
+//	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB,GPIO_PinSource4);
+//	EXTI_InitStruct.EXTI_Line = EXTI_Line4;
+//	EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+//	EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+//	EXTI_InitStruct.EXTI_LineCmd = ENABLE;
+//	EXTI_Init(&EXTI_InitStruct);
+//
+//	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA,GPIO_PinSource15);
+//	EXTI_InitStruct.EXTI_Line = EXTI_Line15;
+//	EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+//	EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+//	EXTI_InitStruct.EXTI_LineCmd = ENABLE;
+//	EXTI_Init(&EXTI_InitStruct);
 
 
 	/* Configure the NVIC Preemption Priority Bits */  
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
 	NVIC_InitTypeDef NVIC_InitStructure;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=2;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0;
 	/* Enable the TIM3 Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel =TIM3_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
 	/* Enable the EXTI3 Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel =EXTI15_10_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
 	/* Enable the EXTI4 Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel =EXTI4_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
@@ -375,7 +375,7 @@ int motor_stop(char* cmd)// "motor:stop:\r" to stop
 	return 1;
 }
 
-int motor_accl(char* cmd)// "motor:accl:\r" to accelarate
+int motor_accl(char* cmd)// "motor:accl:x+|-\r" to accelarate
 {
 
 	if ((cmd[0] == 'x') && (cmd[1] == '+')){

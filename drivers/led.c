@@ -28,11 +28,11 @@
 
 #define led1_rcc                    RCC_APB2Periph_GPIOB
 #define led1_gpio                   GPIOB
-#define led1_pin                    (GPIO_Pin_7)
+#define led1_pin                    (GPIO_Pin_8)
 
-#define led2_rcc                    RCC_APB2Periph_GPIOC
-#define led2_gpio                   GPIOC
-#define led2_pin                    (GPIO_Pin_14)
+#define led2_rcc                    RCC_APB2Periph_GPIOB
+#define led2_gpio                   GPIOB
+#define led2_pin                    (GPIO_Pin_13)
 
 //#endif // led define #ifdef STM32_SIMULATOR
 
@@ -57,6 +57,7 @@ void rt_hw_led_on(rt_uint32_t n)
     switch (n)
     {
     case 0:
+        GPIO_SetBits(led1_gpio, led1_pin);
         GPIO_SetBits(led1_gpio, led1_pin);
         break;
     case 1:

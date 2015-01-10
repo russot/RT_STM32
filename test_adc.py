@@ -35,44 +35,19 @@ class Serial_writer(threading.Thread):
 
 		print "write start..\n", self.serial
 		count =0
-		self.serial.write("adc:swt:232")
-		time.sleep(0.01)
-		print "swt 232"
-		os.system("pause")
-		self.serial.write("adc:swt:485")
-		time.sleep(0.01)
-		print "swt 485"
-		os.system("pause")
-		self.serial.write("adc:swt:CAN")
-		time.sleep(0.01)
-		print "swt CAN"
-		os.system("pause")
-		self.serial.write("adc:swt:NTC")
-		time.sleep(0.01)
-		print "swt NTC"
-		os.system("pause")
-		self.serial.write("adc:swt:UI")
-		time.sleep(0.01)
-		print "swt UI"
-		os.system("pause")
 		self.serial.write("adc:swt:R")
 		time.sleep(0.01)
 		print "swt R"
-		os.system("pause")
-		self.serial.write("adc:pga:R:12")
 		time.sleep(0.1)
-		self.serial.write("adc:pga:A:64")
-		time.sleep(0.1)
-		self.serial.write("adc:pga:B:240")
-		time.sleep(0.1)
-		os.system("pause")
+		#os.system("pause")
 		self.serial.write("adc:cfg:auto:Y")
 		time.sleep(0.01)
-		self.serial.write("adc:cfg:interval:2000")
+		self.serial.write("adc:cfg:interval:4000")
 		time.sleep(0.01)
-		self.serial.write("adc:cfg:channel:0")
+		self.serial.write("adc:cfg:channel:0") #channel_3 is PT1000_Vout
 		time.sleep(0.01)
 		self.serial.write("adc:run:")
+		os.system("pause")
 		time.sleep(330.01)
 		while True:
 			self.serial.write("adc:stop:")
@@ -113,8 +88,8 @@ class Serial_reader(threading.Thread):
 				print out,"%d"%count
 			except:
 				pass
-			if count == 4000:
-				break
+		#	if count == 8000:
+		#		break
 		print "%d records runs for %d seconds"% (count, time.time() - begin)
 		print "%d 运行了%d秒 "% (count, time.time() - begin)
 
