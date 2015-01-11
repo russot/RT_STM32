@@ -261,7 +261,7 @@ void data_t_reset(void)
 {
 	gData.counter1 = 0 ;
 	gData.current = 0 ;
-	TIM_SetCounter(TIM3,0);
+	TIM_SetCounter(TIM2,0);
 }
 #define _A0 gData.ADC_sample[0]
 #define _A1 gData.ADC_sample[1]

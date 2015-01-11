@@ -37,7 +37,7 @@ typedef struct{
 	int (*append)(char*,int);
 }cmd_dealer_t;
 
-#define AD_CH_NUM 4
+#define AD_CH_NUM 6
 #define DATA_LEN 8
 #define BUFF_LEN 64
 #define DATA_NUM  (BUFF_LEN/DATA_LEN)-1
