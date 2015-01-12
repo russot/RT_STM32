@@ -269,7 +269,7 @@ void data_t_reset(void)
 #define _A3 gData.ADC_sample[3]
 #define OVER_FLOW(x)  ((x & 0xfff)==0xfff)
 #define NOT_OVER_FLOW(x)  ((x & 0xfff)!=0xfff)
-#define buf_sz 200
+#define buf_sz 50
 uint16_t filter_buffer[buf_sz];
 
 void data_t_sample(void)
@@ -278,19 +278,19 @@ void data_t_sample(void)
 	int j;
 	uint32_t sum=0;
 	uint8_t channel=0;
-	uint8_t multi_flag=UNSET_;
+	uint8_t x10_flag=UNSET_;
 	if (gData.channel ==0 && gData.ADC_[1] < 0xfff){
 		channel =  1;
-		multi_flag = SET_;
+		x10_flag = SET_;
 	}else{
 		channel = gData.channel;
 	}
 	for (i=0;i<buf_sz;i++){
 		filter_buffer[i] = gData.ADC_[channel] & 0xfff; // sampling data from DMA-memory area gData.ADC_
 		sum += filter_buffer[i];	
-		for(j=0;j<500;j++){;} // delay sometime for next sample
+		delay_loop(40); // delay sometime for next sample
 	}
-	if (multi_flag==SET_)
+	if (x10_flag==SET_)
 		gData.ADC_sample_group[gData.current].signal = (sum / buf_sz) | (0x1<<15);
 	else
 		gData.ADC_sample_group[gData.current].signal = sum / buf_sz;

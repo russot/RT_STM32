@@ -41,46 +41,46 @@ class Serial_writer(threading.Thread):
 		time.sleep(0.1)
 		self.serial.write("adc:pga:R:64")
 		time.sleep(0.1)
-		print "pga: R=64"
+	#	print "pga: R=64"
+	#	self.serial.write("adc:pga:A:2")
+	#	time.sleep(0.1)
+	#	print "pga: A=2"
+	#	os.system("pause")
+	#	self.serial.write("adc:pga:A:4")
+	#	time.sleep(0.1)
+	#	print "pga: A=4"
+	#	os.system("pause")
+	#	self.serial.write("adc:pga:A:8")
+	#	time.sleep(0.1)
+	#	print "pga: A=8"
+	#	os.system("pause")
+	#	self.serial.write("adc:pga:A:16")
+	#	time.sleep(0.1)
+	#	print "pga: A=16"
+	#	os.system("pause")
+	#	self.serial.write("adc:pga:A:32")
+	#	time.sleep(0.1)
+	#	print "pga: A=32"
+	#	os.system("pause")
+	#	self.serial.write("adc:pga:A:64")
+	#	time.sleep(0.1)
+	#	print "pga: A=64"
+	#	os.system("pause")
+	#	self.serial.write("adc:pga:A:128")
+	#	time.sleep(0.1)
+	#	print "pga: A=128"
+	#	os.system("pause")
+	#	self.serial.write("adc:pga:A:2")
+	#	time.sleep(0.1)
+	#	print "pga: A=2"
+	#	os.system("pause")
 		self.serial.write("adc:pga:A:2")
 		time.sleep(0.1)
 		print "pga: A=2"
-		os.system("pause")
-		self.serial.write("adc:pga:A:4")
-		time.sleep(0.1)
-		print "pga: A=4"
-		os.system("pause")
-		self.serial.write("adc:pga:A:8")
-		time.sleep(0.1)
-		print "pga: A=8"
-		os.system("pause")
-		self.serial.write("adc:pga:A:16")
-		time.sleep(0.1)
-		print "pga: A=16"
-		os.system("pause")
-		self.serial.write("adc:pga:A:32")
-		time.sleep(0.1)
-		print "pga: A=32"
-		os.system("pause")
-		self.serial.write("adc:pga:A:64")
-		time.sleep(0.1)
-		print "pga: A=64"
-		os.system("pause")
-		self.serial.write("adc:pga:A:128")
-		time.sleep(0.1)
-		print "pga: A=128"
-		os.system("pause")
-		self.serial.write("adc:pga:A:2")
-		time.sleep(0.1)
-		print "pga: A=2"
-		os.system("pause")
-		self.serial.write("adc:pga:A:2")
-		time.sleep(0.1)
-		print "pga: A=2"
-		os.system("pause")
-		self.serial.write("adc:cfg:auto:Y")
+		#os.system("pause")
+		self.serial.write("adc:cfg:manual:N")
 		time.sleep(0.01)
-		self.serial.write("adc:cfg:interval:4000")
+		self.serial.write("adc:cfg:interval:8000")
 		time.sleep(0.01)
 		self.serial.write("adc:cfg:channel:0") #channel_3 is PT1000_Vout
 		time.sleep(0.01)
