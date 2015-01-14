@@ -164,7 +164,7 @@ __IO void event_thread_entry(void* parameter)
 	middle_status_update();
 	while (1){
 		pollar_service();
-		gData.service();
+		//gData.service();
 		rt_thread_yield();
 	//	printf("evt server...\r\n");
 	}

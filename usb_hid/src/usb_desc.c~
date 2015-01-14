@@ -121,7 +121,7 @@ const uint8_t CustomHID_ConfigDescriptor[CUSTOMHID_SIZ_CONFIG_DESC] =
 	/*	Endpoint descriptor type */
 	0x01,	/* bEndpointAddress: */
 	/*	Endpoint Address (OUT) */
-	0x03,	/* bmAttributes: Interrupt endpoint */
+	0x02,	/* bmAttributes: Interrupt endpoint */
 	0x40,	/* wMaxPacketSize: 64 Bytes max  */
 	0x00,
 	0x05,	/* bInterval: Polling Interval (5 ms) */

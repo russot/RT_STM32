@@ -122,7 +122,7 @@ class Serial_reader(threading.Thread):
 			out = '0x::'
 			for data in datas:
 				out += '%04x'%data
-			print out
+			print >> self.logfile,out
 
 
 			self.count +=1
@@ -133,6 +133,7 @@ class Serial_reader(threading.Thread):
 		print "read start..\n", self.serial
 		begin = time.time()
 		out = ''
+		self.logfile= file("log.txt","w")
 		while True:
 			self.get_usb_data()
 			#out = ''
