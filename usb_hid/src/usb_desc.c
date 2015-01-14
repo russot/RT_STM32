@@ -110,10 +110,10 @@ const uint8_t CustomHID_ConfigDescriptor[CUSTOMHID_SIZ_CONFIG_DESC] =
 	USB_ENDPOINT_DESCRIPTOR_TYPE, /* bDescriptorType: */
 
 	0x82,          /* bEndpointAddress: Endpoint Address (IN) */
-	0x03,          /* bmAttributes: Interrupt endpoint */
+	0x02,          /* bmAttributes: Interrupt endpoint 03:intrerupt 02:bulk */
 	0x40,          /* wMaxPacketSize: 64 Bytes max */
 	0x00,
-	0x01,          /* bInterval: Polling Interval (1 ms) */
+	0x00,          /* bInterval: Polling Interval (1 ms) */
 	/* 34 */
 
 	0x07,	/* bLength: Endpoint Descriptor size */

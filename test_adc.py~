@@ -78,7 +78,7 @@ class Serial_writer(threading.Thread):
 		time.sleep(0.1)
 		print "pga: A=2"
 		#os.system("pause")
-		self.serial.write("adc:cfg:manual:N")
+		self.serial.write("adc:cfg:manual:Y")
 		time.sleep(0.01)
 		self.serial.write("adc:cfg:interval:8000")
 		time.sleep(0.01)
@@ -107,29 +107,48 @@ class Serial_reader(threading.Thread):
 	def __init__(self,serial):
 		threading.Thread.__init__(self)
 		self.serial = serial
+		self.count = 0
+
+	def get_usb_data(self):
+		try:
+			raw_ = self.serial.read(size=64)
+			raw_bytes = ''
+			for x in raw_:
+				raw_bytes +=chr(x)
+			#self.output(raw_bytes)
+			#print raw_bytes
+			#if raw_bytes.startswith('0x:'):
+			datas = struct.unpack('30H', str(raw_bytes)[4:64])
+			out = '0x::'
+			for data in datas:
+				out += '%04x'%data
+			print out
 
 
+			self.count +=1
+		except Exception,e:
+			print e
+			pass
 	def run(self):
 		print "read start..\n", self.serial
-		count = 0
 		begin = time.time()
 		out = ''
 		while True:
-			out = ''
-			try:
-				for byte__ in self.serial.read(size=64):
-					if byte__  != 0:
-						out += chr(byte__)
-			
-			#	out =out.join(byte__)
-				count +=1
-				print out,"%d"%count
-			except:
-				pass
-			if count == 8000:
+			self.get_usb_data()
+			#out = ''
+			#try:
+			#	for byte__ in self.serial.read(size=64):
+			#		out += chr(byte__)
+			#
+			##	out =out.join(byte__)
+			#	count +=1
+			#	print "%d"%count, out
+			#except:
+			#	pass
+			if self.count == 8000:
 				break
-		print "%d records runs for %d seconds"% (count, time.time() - begin)
-		print "%d 运行了%d秒 "% (count, time.time() - begin)
+		print "%d records runs for %d seconds"% (self.count, time.time() - begin)
+		#print "%d 运行了%d秒 "% (self.count, time.time() - begin)
 
 		
 
