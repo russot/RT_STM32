@@ -74,7 +74,7 @@ class Serial_writer(threading.Thread):
 	#	time.sleep(0.1)
 	#	print "pga: A=2"
 	#	os.system("pause")
-		self.serial.write("adc:pga:A:2")
+		self.serial.write("adc:pga:A:1")
 		time.sleep(0.1)
 		print "pga: A=2"
 		#os.system("pause")
@@ -119,10 +119,11 @@ class Serial_reader(threading.Thread):
 			#print raw_bytes
 			#if raw_bytes.startswith('0x:'):
 			datas = struct.unpack('30H', str(raw_bytes)[4:64])
-			out = '0x::'
+			out = '0x:'
 			for data in datas:
 				out += '%04x'%data
-			print >> self.logfile,out
+			#print >> self.logfile,out
+			#print out
 
 
 			self.count +=1
