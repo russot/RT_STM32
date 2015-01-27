@@ -41,6 +41,7 @@ typedef struct{
 #define DATA_LEN 4
 #define BUFF_LEN 64 //mMaxPacketSize of USB bulk is 64Bytes
 #define DATA_NUM  (BUFF_LEN/DATA_LEN)-1
+#define AD_BUFF_LEN 128
 typedef struct{
 	__IO uint16_t length;
 	__IO uint16_t signal;
@@ -48,14 +49,26 @@ typedef struct{
 }data_pair_t;
 
 typedef struct{
-	__IO uint16_t str_buffer[BUFF_LEN/2];
+	__IO uint16_t slot[BUFF_LEN/2];
+} buffer_slot_t;
+
+//loop buffer, with writing_head & reading_tail
+typedef struct{
+	__IO uint16_t *current;
+	__IO uint16_t head;
+	__IO uint16_t tail;
+	buffer_slot_t _buffer[AD_BUFF_LEN];
+} ad_buffer_t;
+
+
+typedef struct{
+	ad_buffer_t ad_buffer;
 	__IO int counter1;
 	__IO int delay;
 	__IO uint16_t ADC_[AD_CH_NUM];
 	__IO int counter1_sample;
 	//__IO uint16_t ADC_sample[AD_CH_NUM];
 	//__IO data_pair_t ADC_sample_group[DATA_NUM];
-	__IO uint16_t *current;
 	__IO int channel;
 	__IO int manual_flag;
 	__IO int sample_flag;

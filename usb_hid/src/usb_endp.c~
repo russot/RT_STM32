@@ -44,10 +44,9 @@ void print2usb(char *str)
 {
 	uint8_t send_buffer[64]={0,};
 	uint8_t *pBuffer = send_buffer;
-        //rt_sem_take(sem_printf, RT_WAITING_FOREVER);
-	if (*str ==0)
-		return ;
-	for (;*str !=0;){
+        rt_sem_take(sem_printf, RT_WAITING_FOREVER);
+	for (;PrevXferComplete!=1;){}//wait for last transfer completed
+	for (;;){
 		*pBuffer = *str;
 		str++;
 		pBuffer++;
@@ -57,7 +56,7 @@ void print2usb(char *str)
 	}
 	UserToPMABufferCopy(send_buffer, ENDP2_TXADDR, 64);
 	SetEPTxValid(ENDP2);
-        //rt_sem_release(sem_printf);
+        rt_sem_release(sem_printf);
 }
 /* Private functions ---------------------------------------------------------*/
 /*******************************************************************************

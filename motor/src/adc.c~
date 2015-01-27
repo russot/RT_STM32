@@ -57,12 +57,29 @@ void delay_loop(int ticks_)
 
 void data_t_service(void)
 {
+	//if (gData.sample_flag == UNSET_)
+	//	return ;	
+	//new data, format and upload if neeeded 
+	//gData.sample_flag = UNSET_;
 	//gData.format();
-	if (gData.need_upload_flag != SET_)
-		return 
-	gData.need_upload_flag = UNSET_;
+	if (gData.need_upload_flag == SET_){ //!!!! mutex may be need  here.
+		gData.need_upload_flag = UNSET_;
+		gData.upload();
+	}
+
+}
+
+void data_t_upload(void)
+{
 	//printf(&(gData.str_buffer[0]));
-	print2usb(&(gData.str_buffer[0]));
+	
+	int tail = gData.ad_buffer.tail;
+	while (gData.ad_buffer.tail != gData.ad_buffer.head){
+		print2usb(&(gData.ad_buffer._buffer[tail].slot[0]));
+		gData.ad_buffer.tail += 1;
+		if (gData.ad_buffer.tail == AD_BUFF_LEN )
+			gData.ad_buffer.tail = 0;
+	}
 }
 
 void data_t_run(char* cmd)
@@ -233,7 +250,7 @@ void data_t_format(void)
 	uint16_t *pLength;
 	uint16_t *pSignal;
 	uint16_t *pStart;
-	pStart = (uint16_t*) &(gData.str_buffer[4]);
+	//pStart = (uint16_t*) &(gData.str_buffer[4]);
 	//switch (gData.running_flag){
 	//	case SET_:
 	//		if (gData.current == 0 )
@@ -258,7 +275,7 @@ void data_t_format(void)
 void data_t_reset(void)
 {
 	gData.counter1 = 0 ;
-	gData.current = &(gData.str_buffer[2]);
+	gData.ad_buffer.current = &(gData.ad_buffer._buffer[0].slot[2]); //'0x::.......................'
 	TIM_SetCounter(TIM2,0);
 }
 #define _A0 gData.ADC_sample[0]
@@ -267,11 +284,11 @@ void data_t_reset(void)
 #define _A3 gData.ADC_sample[3]
 #define OVER_FLOW(x)  ((x & 0xfff)==0xfff)
 #define NOT_OVER_FLOW(x)  ((x & 0xfff)!=0xfff)
-#define filter_size 10
+#define filter_size 50
 //uint16_t filter_buffer[filter_size];
-#define SMP_DELAY 30
-#define DATA0_ADDR &(gData.str_buffer[2])
-#define DATAn_ADDR &(gData.str_buffer[31])
+#define SMP_DELAY 10
+#define DATA0_ADDR &(gData.ad_buffer._buffer[gData.ad_buffer.head].slot[2])
+#define DATAn_ADDR &(gData.ad_buffer._buffer[gData.ad_buffer.head].slot[31])
 void data_t_sample(void) {
 	int i;
 	uint32_t sum;
@@ -291,18 +308,14 @@ void data_t_sample(void) {
 		delay_loop(SMP_DELAY); // delay sometime for next sample
 	}
 	if (gData.manual_flag == SET_){// select current  length
-		*(gData.current) = 0xffff; // manual mode, set to 0 
+		*(gData.ad_buffer.current) = 0xffff; // manual mode, set to 0 
 	}else{
-		*(gData.current) = gData.counter1; // manual mode, set to 0 
+		*(gData.ad_buffer.current) = gData.counter1; // manual mode, set to 0 
 	}
 	if (x10_flag==SET_)
-		*(gData.current + 1) =  (sum / filter_size) | (0x1<<15);
+		*(gData.ad_buffer.current + 1) = (sum / filter_size) | (0x1<<15);
 	else
-		*(gData.current + 1) =  (sum / filter_size) ;
-	//if (x10_flag==SET_)
-	//	*(gData.current + 1) =  (gData.ADC_[channel] & 0xfff) | (0x1<<15);
-	//else
-	//	*(gData.current + 1) =  (gData.ADC_[channel] & 0xfff) ;
+		*(gData.ad_buffer.current + 1) = (sum / filter_size) ;
 	//*(gData.current + 1) = 0x55aa;
 	//*(pData++)  = 0x55;
 	//*(pData++)  = 0xaa;
@@ -316,31 +329,51 @@ void data_t_sample(void) {
 //			gData.ADC_sample_group[gData.current].signal = sum / filter_size;
 //		}
 	
-	gData.current += 2;
-	if ( (gData.current > &(gData.str_buffer[31]))   ){ // running mode, upload 7 samples once; stopped mode, upload every sample
-		gData.current = &(gData.str_buffer[2]);
+	gData.ad_buffer.current += 2;
+	if ( (gData.ad_buffer.current > DATAn_ADDR)  ){ // running mode, upload 7 samples once; stopped mode, upload every sample
+		gData.ad_buffer.head += 1;// first,adjust  write_slot 
+		if (gData.ad_buffer.head == AD_BUFF_LEN)
+			gData.ad_buffer.head = 0;
+		gData.ad_buffer.current = DATA0_ADDR; // second, adjust write_head(index)
 		gData.need_upload_flag = SET_;
 	}
+	//gData.sample_flag = SET_;
 }
+
+// loop buffer init
+void ad_buffer_init(void)
+{
+	int i;
+	for (i=0;i<AD_BUFF_LEN;i++){
+		gData.ad_buffer._buffer[i].slot[0]=0x7830; // '0x::'
+		gData.ad_buffer._buffer[i].slot[1]=0x3a3a; // '0x::'
+	}
+	gData.ad_buffer.head = 0; 
+	gData.ad_buffer.tail = 0;
+	gData.ad_buffer.current = &(gData.ad_buffer._buffer[0].slot[2]); //'0x::.......................'
+}
+
+
 
 void data_t_init(void){
 	gData.service = data_t_service;
 	gData.cfg= data_t_cfg;
 	gData.run = data_t_run;
 	gData.stop = data_t_stop;
-	//gData.upload = data_t_upload;
+	gData.upload = data_t_upload;
 	gData.format = data_t_format;
 	gData.sample = data_t_sample;
 	gData.channel= 0;
 	gData.reset  = data_t_reset;
 	gData.reset();
-	gData.str_buffer[0] = 0x7830; //0x
-	gData.str_buffer[1] = 0x3a3a; //::
+	//gData.str_buffer[0] = 0x7830; //0x
+	//gData.str_buffer[1] = 0x3a3a; //::
 	gData.delay= 1;
-	//gData.sample_flag = UNSET_ ;
+	gData.sample_flag = UNSET_ ;
 	gData.need_upload_flag = UNSET_ ;
 	gData.running_flag = UNSET_ ;
 	gData.manual_flag = UNSET_ ;
+	ad_buffer_init();
 
 
 }
@@ -511,7 +544,7 @@ void sample_temp(void)
 		return
 	gThermo_flag=UNSET_;
 	status = gSW_status;
-	switch_NTC();
+	//switch_NTC();
  	/*Warning: sleep 1ms to be stable */
 	rt_thread_delay( RT_TICK_PER_SECOND/1000);
 	PT  = gData.ADC_[3];
@@ -559,7 +592,6 @@ __IO void ad_sample_thread_entry(void* parameter)
 	while (1){
 		if( gData.running_flag == SET_)
 			gData.sample();
-			gData.service();
 			sample_temp();
 		rt_thread_delay( gData.delay); /* sleep 0.5 second and switch to other thread */
 	}

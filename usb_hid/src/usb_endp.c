@@ -45,9 +45,8 @@ void print2usb(char *str)
 	uint8_t send_buffer[64]={0,};
 	uint8_t *pBuffer = send_buffer;
         rt_sem_take(sem_printf, RT_WAITING_FOREVER);
-	if (*str ==0)
-		return ;
-	for (;*str !=0;){
+	for (;PrevXferComplete!=1;){}//wait for last transfer completed
+	for (;;){
 		*pBuffer = *str;
 		str++;
 		pBuffer++;
