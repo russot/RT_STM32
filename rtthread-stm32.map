@@ -45,7 +45,7 @@ rt_thread_priority_table
 serial1             0x7c              build\drivers\usart.o
 rt_object_put_hook  0x4               build\src\object.o
 SaveTState          0x2               build\usb_hid\src\usb_int.o
-gData               0x9c              build\motor\src\adc.o
+gData               0x2060            build\motor\src\adc.o
 gCmd_dealer         0x424             build\motor\src\cmd.o
 Device_Info         0x1c              build\usb_hid\src\usb_init.o
 rt_current_priority
@@ -1094,11 +1094,12 @@ Discarded input sections
  .text          0x00000000        0x0 build\motor\src\adc.o
  .data          0x00000000        0x0 build\motor\src\adc.o
  .bss           0x00000000        0x0 build\motor\src\adc.o
- .text.delay_loop
-                0x00000000       0x24 build\motor\src\adc.o
- .text.set_SW   0x00000000       0x20 build\motor\src\adc.o
+ .text.ad_buffer_init
+                0x00000000       0x40 build\motor\src\adc.o
  .text.status_init
-                0x00000000       0x1c build\motor\src\adc.o
+                0x00000000       0x40 build\motor\src\adc.o
+ .bss.gSW_status
+                0x00000000        0x4 build\motor\src\adc.o
  .text          0x00000000        0x0 build\motor\src\cmd.o
  .data          0x00000000        0x0 build\motor\src\cmd.o
  .bss           0x00000000        0x0 build\motor\src\cmd.o
@@ -1107,6 +1108,8 @@ Discarded input sections
  .bss           0x00000000        0x0 build\motor\src\counter.o
  .text.tim2_init_
                 0x00000000        0x4 build\motor\src\counter.o
+ .data.gCounter_DirPin
+                0x00000000        0x8 build\motor\src\counter.o
  .text          0x00000000        0x0 build\motor\src\entry.o
  .data          0x00000000        0x0 build\motor\src\entry.o
  .bss           0x00000000        0x0 build\motor\src\entry.o
@@ -2108,7 +2111,7 @@ LOAD d:/gcc-arm-embed/bin/../lib/gcc/arm-none-eabi/4.7.3/armv7-m/crtend.o
 LOAD d:/gcc-arm-embed/bin/../lib/gcc/arm-none-eabi/4.7.3/armv7-m/crtn.o
                 0x00000400                _system_stack_size = 0x400
 
-.text           0x08000000     0xa130
+.text           0x08000000     0xa038
                 0x08000000                . = ALIGN (0x4)
                 0x08000000                _stext = .
  *(.isr_vector)
@@ -2409,962 +2412,948 @@ LOAD d:/gcc-arm-embed/bin/../lib/gcc/arm-none-eabi/4.7.3/armv7-m/crtn.o
                 0x08003768                FLASH_IRQHandler
                 0x08003768                I2C1_ER_IRQHandler
  .text.data_t_run
-                0x0800376c       0x10 build\motor\src\adc.o
+                0x0800376c        0xc build\motor\src\adc.o
                 0x0800376c                data_t_run
  .text.data_t_stop
-                0x0800377c       0x10 build\motor\src\adc.o
-                0x0800377c                data_t_stop
+                0x08003778        0xc build\motor\src\adc.o
+                0x08003778                data_t_stop
  .text.data_t_set_manual
-                0x0800378c       0x28 build\motor\src\adc.o
-                0x0800378c                data_t_set_manual
+                0x08003784       0x28 build\motor\src\adc.o
+                0x08003784                data_t_set_manual
  .text.data_t_format
-                0x080037b4        0x4 build\motor\src\adc.o
-                0x080037b4                data_t_format
+                0x080037ac        0x4 build\motor\src\adc.o
+                0x080037ac                data_t_format
  .text.data_t_sample
-                0x080037b8       0x9c build\motor\src\adc.o
-                0x080037b8                data_t_sample
+                0x080037b0       0xfc build\motor\src\adc.o
+                0x080037b0                data_t_sample
  .text.get_temp
-                0x08003854       0x10 build\motor\src\adc.o
-                0x08003854                get_temp
- .text.data_t_service
-                0x08003864       0x18 build\motor\src\adc.o
-                0x08003864                data_t_service
+                0x080038ac       0x10 build\motor\src\adc.o
+                0x080038ac                get_temp
+ .text.data_t_upload
+                0x080038bc       0x40 build\motor\src\adc.o
+                0x080038bc                data_t_upload
  .text.data_t_reset
-                0x0800387c       0x20 build\motor\src\adc.o
-                0x0800387c                data_t_reset
+                0x080038fc       0x24 build\motor\src\adc.o
+                0x080038fc                data_t_reset
  .text.data_t_init
-                0x0800389c       0x78 build\motor\src\adc.o
-                0x0800389c                data_t_init
- .text.data_t_set_channel
-                0x08003914       0x14 build\motor\src\adc.o
-                0x08003914                data_t_set_channel
- .text.data_t_set_interval
-                0x08003928       0x1c build\motor\src\adc.o
-                0x08003928                data_t_set_interval
- .text.data_t_cfg
-                0x08003944        0xc build\motor\src\adc.o
-                0x08003944                data_t_cfg
- .text.set_SW.part.0
-                0x08003950       0x18 build\motor\src\adc.o
- .text.switch_485
-                0x08003968       0x38 build\motor\src\adc.o
-                0x08003968                switch_485
- .text.switch_232
-                0x080039a0       0x3c build\motor\src\adc.o
-                0x080039a0                switch_232
- .text.switch_CAN
-                0x080039dc       0x3c build\motor\src\adc.o
-                0x080039dc                switch_CAN
- .text.switch_NTC
-                0x08003a18       0x3c build\motor\src\adc.o
-                0x08003a18                switch_NTC
- .text.switch_R
-                0x08003a54       0x50 build\motor\src\adc.o
-                0x08003a54                switch_R
- .text.switch_UI
-                0x08003aa4       0x50 build\motor\src\adc.o
-                0x08003aa4                switch_UI
+                0x08003920       0xb4 build\motor\src\adc.o
+                0x08003920                data_t_init
  .text.switch_RAT
-                0x08003af4       0xb4 build\motor\src\adc.o
-                0x08003af4                switch_RAT
+                0x080039d4      0x120 build\motor\src\adc.o
+                0x080039d4                switch_RAT
+ .text.data_t_set_channel
+                0x08003af4       0x10 build\motor\src\adc.o
+                0x08003af4                data_t_set_channel
+ .text.data_t_set_interval
+                0x08003b04       0x1c build\motor\src\adc.o
+                0x08003b04                data_t_set_interval
+ .text.data_t_cfg
+                0x08003b20        0xc build\motor\src\adc.o
+                0x08003b20                data_t_cfg
+ .text.data_t_service
+                0x08003b2c       0x1c build\motor\src\adc.o
+                0x08003b2c                data_t_service
+ .text.delay_loop
+                0x08003b48       0x1c build\motor\src\adc.o
+                0x08003b48                delay_loop
  .text.RCC_ADC_init
-                0x08003ba8       0x38 build\motor\src\adc.o
-                0x08003ba8                RCC_ADC_init
+                0x08003b64       0x38 build\motor\src\adc.o
+                0x08003b64                RCC_ADC_init
  .text.swR_init
-                0x08003be0       0x34 build\motor\src\adc.o
-                0x08003be0                swR_init
+                0x08003b9c       0x74 build\motor\src\adc.o
+                0x08003b9c                swR_init
  .text.GPIO_ADC_init
-                0x08003c14       0x84 build\motor\src\adc.o
-                0x08003c14                GPIO_ADC_init
+                0x08003c10       0x84 build\motor\src\adc.o
+                0x08003c10                GPIO_ADC_init
  .text.DMA_ADC_init
-                0x08003c98       0x5c build\motor\src\adc.o
-                0x08003c98                DMA_ADC_init
+                0x08003c94       0x5c build\motor\src\adc.o
+                0x08003c94                DMA_ADC_init
  .text.adc_config
-                0x08003cf4      0x128 build\motor\src\adc.o
-                0x08003cf4                adc_config
+                0x08003cf0      0x128 build\motor\src\adc.o
+                0x08003cf0                adc_config
  .text.sample_temp
-                0x08003e1c       0x84 build\motor\src\adc.o
-                0x08003e1c                sample_temp
+                0x08003e18       0x34 build\motor\src\adc.o
+                0x08003e18                sample_temp
  .text.ad_sample_thread_entry
-                0x08003ea0       0x2c build\motor\src\adc.o
-                0x08003ea0                ad_sample_thread_entry
+                0x08003e4c       0x28 build\motor\src\adc.o
+                0x08003e4c                ad_sample_thread_entry
  .text.has_cmd_
-                0x08003ecc       0x14 build\motor\src\cmd.o
-                0x08003ecc                has_cmd_
- .text.append_  0x08003ee0       0x7c build\motor\src\cmd.o
-                0x08003ee0                append_
+                0x08003e74       0x14 build\motor\src\cmd.o
+                0x08003e74                has_cmd_
+ .text.append_  0x08003e88       0x7c build\motor\src\cmd.o
+                0x08003e88                append_
  .text.get_calibr
-                0x08003f5c       0x38 build\motor\src\cmd.o
-                0x08003f5c                get_calibr
- .text.flash    0x08003f94       0x34 build\motor\src\cmd.o
-                0x08003f94                flash
+                0x08003f04       0x38 build\motor\src\cmd.o
+                0x08003f04                get_calibr
+ .text.flash    0x08003f3c       0x34 build\motor\src\cmd.o
+                0x08003f3c                flash
  .text.set_calibr
-                0x08003fc8       0x4c build\motor\src\cmd.o
-                0x08003fc8                set_calibr
+                0x08003f70       0x4c build\motor\src\cmd.o
+                0x08003f70                set_calibr
  .text.console_srv
-                0x08004014       0x6c build\motor\src\cmd.o
-                0x08004014                console_srv
+                0x08003fbc       0x6c build\motor\src\cmd.o
+                0x08003fbc                console_srv
  .text.deal_cmd__
-                0x08004080       0x5c build\motor\src\cmd.o
-                0x08004080                deal_cmd__
+                0x08004028       0x5c build\motor\src\cmd.o
+                0x08004028                deal_cmd__
  .text.deal_cmd_
-                0x080040dc       0xa8 build\motor\src\cmd.o
-                0x080040dc                deal_cmd_
+                0x08004084       0xa8 build\motor\src\cmd.o
+                0x08004084                deal_cmd_
  .text.vout_srv
-                0x08004184        0xc build\motor\src\cmd.o
-                0x08004184                vout_srv
- .text.adc_srv  0x08004190        0xc build\motor\src\cmd.o
-                0x08004190                adc_srv
+                0x0800412c        0xc build\motor\src\cmd.o
+                0x0800412c                vout_srv
+ .text.adc_srv  0x08004138        0xc build\motor\src\cmd.o
+                0x08004138                adc_srv
  .text.motor_srv
-                0x0800419c        0xc build\motor\src\cmd.o
-                0x0800419c                motor_srv
+                0x08004144        0xc build\motor\src\cmd.o
+                0x08004144                motor_srv
  .text.calib_srv
-                0x080041a8        0xc build\motor\src\cmd.o
-                0x080041a8                calib_srv
+                0x08004150        0xc build\motor\src\cmd.o
+                0x08004150                calib_srv
  .text.cmd_dealer_init
-                0x080041b4       0x4c build\motor\src\cmd.o
-                0x080041b4                cmd_dealer_init
+                0x0800415c       0x4c build\motor\src\cmd.o
+                0x0800415c                cmd_dealer_init
  .text.cmd_thread_entry
-                0x08004200       0x38 build\motor\src\cmd.o
-                0x08004200                cmd_thread_entry
+                0x080041a8       0x38 build\motor\src\cmd.o
+                0x080041a8                cmd_thread_entry
  .text.TIM2_IRQHandler
-                0x08004238       0x90 build\motor\src\counter.o
-                0x08004238                TIM2_IRQHandler
+                0x080041e0       0x90 build\motor\src\counter.o
+                0x080041e0                TIM2_IRQHandler
  .text.tim2_IRQ_init
-                0x080042c8       0x2c build\motor\src\counter.o
-                0x080042c8                tim2_IRQ_init
+                0x08004270       0x2c build\motor\src\counter.o
+                0x08004270                tim2_IRQ_init
  .text.tim2_init
-                0x080042f4       0xd4 build\motor\src\counter.o
-                0x080042f4                tim2_init
+                0x0800429c       0xb4 build\motor\src\counter.o
+                0x0800429c                tim2_init
  .text.RCC_Configuration_motor
-                0x080043c8        0x8 build\motor\src\entry.o
-                0x080043c8                RCC_Configuration_motor
+                0x08004350        0x8 build\motor\src\entry.o
+                0x08004350                RCC_Configuration_motor
  .text.hardware_init
-                0x080043d0       0x28 build\motor\src\entry.o
-                0x080043d0                hardware_init
+                0x08004358       0x28 build\motor\src\entry.o
+                0x08004358                hardware_init
  .text.motor_set_auto
-                0x080043f8       0x34 build\motor\src\pwm.o
-                0x080043f8                motor_set_auto
+                0x08004380       0x34 build\motor\src\pwm.o
+                0x08004380                motor_set_auto
  .text.motor_setup
-                0x0800442c       0x14 build\motor\src\pwm.o
-                0x0800442c                motor_setup
+                0x080043b4       0x14 build\motor\src\pwm.o
+                0x080043b4                motor_setup
  .text.middle_Y_led
-                0x08004440        0x8 build\motor\src\pwm.o
-                0x08004440                middle_Y_led
+                0x080043c8        0x8 build\motor\src\pwm.o
+                0x080043c8                middle_Y_led
  .text.middle_N_led
-                0x08004448        0x8 build\motor\src\pwm.o
-                0x08004448                middle_N_led
+                0x080043d0        0x8 build\motor\src\pwm.o
+                0x080043d0                middle_N_led
  .text.middle_status_update
-                0x08004450       0x34 build\motor\src\pwm.o
-                0x08004450                middle_status_update
+                0x080043d8       0x34 build\motor\src\pwm.o
+                0x080043d8                middle_status_update
  .text.EXTI15_10_IRQHandler
-                0x08004484       0x38 build\motor\src\pwm.o
-                0x08004484                EXTI15_10_IRQHandler
+                0x0800440c       0x38 build\motor\src\pwm.o
+                0x0800440c                EXTI15_10_IRQHandler
  .text.EXTI4_IRQHandler
-                0x080044bc       0x34 build\motor\src\pwm.o
-                0x080044bc                EXTI4_IRQHandler
+                0x08004444       0x34 build\motor\src\pwm.o
+                0x08004444                EXTI4_IRQHandler
  .text.pwm_accl
-                0x080044f0       0x2c build\motor\src\pwm.o
-                0x080044f0                pwm_accl
+                0x08004478       0x2c build\motor\src\pwm.o
+                0x08004478                pwm_accl
  .text.pwm_dccl
-                0x0800451c       0x24 build\motor\src\pwm.o
-                0x0800451c                pwm_dccl
+                0x080044a4       0x24 build\motor\src\pwm.o
+                0x080044a4                pwm_dccl
  .text.motor_accl
-                0x08004540       0x38 build\motor\src\pwm.o
-                0x08004540                motor_accl
+                0x080044c8       0x38 build\motor\src\pwm.o
+                0x080044c8                motor_accl
  .text.pwm_stop
-                0x08004578       0x44 build\motor\src\pwm.o
-                0x08004578                pwm_stop
+                0x08004500       0x44 build\motor\src\pwm.o
+                0x08004500                pwm_stop
  .text.motor_stop
-                0x080045bc       0x18 build\motor\src\pwm.o
-                0x080045bc                motor_stop
+                0x08004544       0x18 build\motor\src\pwm.o
+                0x08004544                motor_stop
  .text.pollar_service
-                0x080045d4       0x8c build\motor\src\pwm.o
-                0x080045d4                pollar_service
+                0x0800455c       0x8c build\motor\src\pwm.o
+                0x0800455c                pollar_service
  .text.event_thread_entry
-                0x08004660       0x10 build\motor\src\pwm.o
-                0x08004660                event_thread_entry
- .text.pwm_run  0x08004670       0x34 build\motor\src\pwm.o
-                0x08004670                pwm_run
+                0x080045e8       0x1c build\motor\src\pwm.o
+                0x080045e8                event_thread_entry
+ .text.pwm_run  0x08004604       0x34 build\motor\src\pwm.o
+                0x08004604                pwm_run
  .text.pwm_set_forward
-                0x080046a4       0x14 build\motor\src\pwm.o
-                0x080046a4                pwm_set_forward
+                0x08004638       0x14 build\motor\src\pwm.o
+                0x08004638                pwm_set_forward
  .text.pwm_set_backward
-                0x080046b8       0x14 build\motor\src\pwm.o
-                0x080046b8                pwm_set_backward
+                0x0800464c       0x14 build\motor\src\pwm.o
+                0x0800464c                pwm_set_backward
  .text.motor_run
-                0x080046cc       0x5c build\motor\src\pwm.o
-                0x080046cc                motor_run
+                0x08004660       0x5c build\motor\src\pwm.o
+                0x08004660                motor_run
  .text.motor_move
-                0x08004728       0x80 build\motor\src\pwm.o
-                0x08004728                motor_move
+                0x080046bc       0x80 build\motor\src\pwm.o
+                0x080046bc                motor_move
  .text.vout_set
-                0x080047a8       0x34 build\motor\src\vout.o
-                0x080047a8                vout_set
+                0x0800473c       0x34 build\motor\src\vout.o
+                0x0800473c                vout_set
  .text.RCC_vout_init
-                0x080047dc        0xc build\motor\src\vout.o
-                0x080047dc                RCC_vout_init
+                0x08004770        0xc build\motor\src\vout.o
+                0x08004770                RCC_vout_init
  .text.GPIO_vout_init
-                0x080047e8       0x2c build\motor\src\vout.o
-                0x080047e8                GPIO_vout_init
+                0x0800477c       0x2c build\motor\src\vout.o
+                0x0800477c                GPIO_vout_init
  .text.t1c1_init
-                0x08004814       0x88 build\motor\src\vout.o
-                0x08004814                t1c1_init
+                0x080047a8       0x88 build\motor\src\vout.o
+                0x080047a8                t1c1_init
  .text.vout_init
-                0x0800489c       0x14 build\motor\src\vout.o
-                0x0800489c                vout_init
+                0x08004830       0x14 build\motor\src\vout.o
+                0x08004830                vout_init
  .text.vout_adj
-                0x080048b0       0x3c build\motor\src\vout.o
-                0x080048b0                vout_adj
+                0x08004844       0x3c build\motor\src\vout.o
+                0x08004844                vout_adj
  .text.vout_decrease
-                0x080048ec       0x24 build\motor\src\vout.o
-                0x080048ec                vout_decrease
+                0x08004880       0x24 build\motor\src\vout.o
+                0x08004880                vout_decrease
  .text.vout_increase
-                0x08004910       0x24 build\motor\src\vout.o
-                0x08004910                vout_increase
+                0x080048a4       0x24 build\motor\src\vout.o
+                0x080048a4                vout_increase
  .text.RCC_pga_init
-                0x08004934        0x8 build\motor\src\pga.o
-                0x08004934                RCC_pga_init
+                0x080048c8        0x8 build\motor\src\pga.o
+                0x080048c8                RCC_pga_init
  .text.GPIO_pga_init
-                0x0800493c       0xc4 build\motor\src\pga.o
-                0x0800493c                GPIO_pga_init
+                0x080048d0       0x40 build\motor\src\pga.o
+                0x080048d0                GPIO_pga_init
  .text.pga_init
-                0x08004a00       0x10 build\motor\src\pga.o
-                0x08004a00                pga_init
+                0x08004910       0x10 build\motor\src\pga.o
+                0x08004910                pga_init
  .text.write_sport
-                0x08004a10       0x98 build\motor\src\pga.o
-                0x08004a10                write_sport
- .text.pga_set  0x08004aa8       0x8c build\motor\src\pga.o
-                0x08004aa8                pga_set
+                0x08004920       0x98 build\motor\src\pga.o
+                0x08004920                write_sport
+ .text.pga_set  0x080049b8       0xac build\motor\src\pga.o
+                0x080049b8                pga_set
  .text.usb_init
-                0x08004b34       0x30 build\usb_hid\src\entry.o
-                0x08004b34                usb_init
- .text.Delay    0x08004b64       0x24 build\usb_hid\src\entry.o
-                0x08004b64                Delay
+                0x08004a64       0x30 build\usb_hid\src\entry.o
+                0x08004a64                usb_init
+ .text.Delay    0x08004a94       0x24 build\usb_hid\src\entry.o
+                0x08004a94                Delay
  .text.IntToUnicode
-                0x08004b88       0x78 build\usb_hid\src\hw_config.o
+                0x08004ab8       0x78 build\usb_hid\src\hw_config.o
  .text.Set_USBClock
-                0x08004c00       0x18 build\usb_hid\src\hw_config.o
-                0x08004c00                Set_USBClock
+                0x08004b30       0x18 build\usb_hid\src\hw_config.o
+                0x08004b30                Set_USBClock
  .text.USB_Interrupts_Config
-                0x08004c18       0x40 build\usb_hid\src\hw_config.o
-                0x08004c18                USB_Interrupts_Config
+                0x08004b48       0x40 build\usb_hid\src\hw_config.o
+                0x08004b48                USB_Interrupts_Config
  .text.USB_Cable_Config
-                0x08004c58       0x24 build\usb_hid\src\hw_config.o
-                0x08004c58                USB_Cable_Config
+                0x08004b88       0x24 build\usb_hid\src\hw_config.o
+                0x08004b88                USB_Cable_Config
  .text.GPIO_Configuration
-                0x08004c7c       0x34 build\usb_hid\src\hw_config.o
-                0x08004c7c                GPIO_Configuration
+                0x08004bac       0x34 build\usb_hid\src\hw_config.o
+                0x08004bac                GPIO_Configuration
  .text.Set_System
-                0x08004cb0       0x1c build\usb_hid\src\hw_config.o
-                0x08004cb0                Set_System
+                0x08004be0       0x1c build\usb_hid\src\hw_config.o
+                0x08004be0                Set_System
  .text.Get_SerialNum
-                0x08004ccc       0x44 build\usb_hid\src\hw_config.o
-                0x08004ccc                Get_SerialNum
+                0x08004bfc       0x44 build\usb_hid\src\hw_config.o
+                0x08004bfc                Get_SerialNum
  .text.STM_EVAL_LEDOn
-                0x08004d10       0x1c build\usb_hid\src\stm3210b_eval.o
-                0x08004d10                STM_EVAL_LEDOn
+                0x08004c40       0x1c build\usb_hid\src\stm3210b_eval.o
+                0x08004c40                STM_EVAL_LEDOn
  .text.STM_EVAL_LEDOff
-                0x08004d2c       0x1c build\usb_hid\src\stm3210b_eval.o
-                0x08004d2c                STM_EVAL_LEDOff
+                0x08004c5c       0x1c build\usb_hid\src\stm3210b_eval.o
+                0x08004c5c                STM_EVAL_LEDOff
  .text.USB_LP_CAN1_RX0_IRQHandler
-                0x08004d48        0x4 build\usb_hid\src\stm32_it.o
-                0x08004d48                USB_LP_CAN1_RX0_IRQHandler
+                0x08004c78        0x4 build\usb_hid\src\stm32_it.o
+                0x08004c78                USB_LP_CAN1_RX0_IRQHandler
  .text.USBWakeUp_IRQHandler
-                0x08004d4c        0x8 build\usb_hid\src\stm32_it.o
-                0x08004d4c                USBWakeUp_IRQHandler
+                0x08004c7c        0x8 build\usb_hid\src\stm32_it.o
+                0x08004c7c                USBWakeUp_IRQHandler
  .text.Standard_GetConfiguration
-                0x08004d54       0x28 build\usb_hid\src\usb_core.o
-                0x08004d54                Standard_GetConfiguration
+                0x08004c84       0x28 build\usb_hid\src\usb_core.o
+                0x08004c84                Standard_GetConfiguration
  .text.Standard_GetInterface
-                0x08004d7c       0x28 build\usb_hid\src\usb_core.o
-                0x08004d7c                Standard_GetInterface
+                0x08004cac       0x28 build\usb_hid\src\usb_core.o
+                0x08004cac                Standard_GetInterface
  .text.Standard_GetStatus
-                0x08004da4       0xa0 build\usb_hid\src\usb_core.o
-                0x08004da4                Standard_GetStatus
+                0x08004cd4       0xa0 build\usb_hid\src\usb_core.o
+                0x08004cd4                Standard_GetStatus
  .text.DataStageIn
-                0x08004e44       0xb4 build\usb_hid\src\usb_core.o
+                0x08004d74       0xb4 build\usb_hid\src\usb_core.o
  .text.Standard_SetConfiguration
-                0x08004ef8       0x3c build\usb_hid\src\usb_core.o
-                0x08004ef8                Standard_SetConfiguration
+                0x08004e28       0x3c build\usb_hid\src\usb_core.o
+                0x08004e28                Standard_SetConfiguration
  .text.Standard_SetInterface
-                0x08004f34       0x50 build\usb_hid\src\usb_core.o
-                0x08004f34                Standard_SetInterface
+                0x08004e64       0x50 build\usb_hid\src\usb_core.o
+                0x08004e64                Standard_SetInterface
  .text.Standard_ClearFeature
-                0x08004f84       0xe8 build\usb_hid\src\usb_core.o
-                0x08004f84                Standard_ClearFeature
+                0x08004eb4       0xe8 build\usb_hid\src\usb_core.o
+                0x08004eb4                Standard_ClearFeature
  .text.Standard_SetEndPointFeature
-                0x0800506c       0x98 build\usb_hid\src\usb_core.o
-                0x0800506c                Standard_SetEndPointFeature
+                0x08004f9c       0x98 build\usb_hid\src\usb_core.o
+                0x08004f9c                Standard_SetEndPointFeature
  .text.Standard_GetDescriptorData
-                0x08005104       0x1c build\usb_hid\src\usb_core.o
-                0x08005104                Standard_GetDescriptorData
+                0x08005034       0x1c build\usb_hid\src\usb_core.o
+                0x08005034                Standard_GetDescriptorData
  .text.Post0_Process
-                0x08005120       0x44 build\usb_hid\src\usb_core.o
-                0x08005120                Post0_Process
+                0x08005050       0x44 build\usb_hid\src\usb_core.o
+                0x08005050                Post0_Process
  .text.Out0_Process
-                0x08005164       0xe4 build\usb_hid\src\usb_core.o
-                0x08005164                Out0_Process
+                0x08005094       0xe4 build\usb_hid\src\usb_core.o
+                0x08005094                Out0_Process
  .text.Setup0_Process
-                0x08005248      0x370 build\usb_hid\src\usb_core.o
-                0x08005248                Setup0_Process
+                0x08005178      0x370 build\usb_hid\src\usb_core.o
+                0x08005178                Setup0_Process
  .text.SetDeviceAddress
-                0x080055b8       0xa8 build\usb_hid\src\usb_core.o
-                0x080055b8                SetDeviceAddress
+                0x080054e8       0xa8 build\usb_hid\src\usb_core.o
+                0x080054e8                SetDeviceAddress
  .text.In0_Process
-                0x08005660       0x60 build\usb_hid\src\usb_core.o
-                0x08005660                In0_Process
+                0x08005590       0x60 build\usb_hid\src\usb_core.o
+                0x08005590                In0_Process
  .text.NOP_Process
-                0x080056c0        0x4 build\usb_hid\src\usb_core.o
-                0x080056c0                NOP_Process
+                0x080055f0        0x4 build\usb_hid\src\usb_core.o
+                0x080055f0                NOP_Process
  .text.print2usb
-                0x080056c4       0x74 build\usb_hid\src\usb_endp.o
-                0x080056c4                print2usb
+                0x080055f4       0x5c build\usb_hid\src\usb_endp.o
+                0x080055f4                print2usb
  .text.EP1_OUT_Callback
-                0x08005738       0x38 build\usb_hid\src\usb_endp.o
-                0x08005738                EP1_OUT_Callback
+                0x08005650       0x38 build\usb_hid\src\usb_endp.o
+                0x08005650                EP1_OUT_Callback
  .text.EP2_IN_Callback
-                0x08005770       0x10 build\usb_hid\src\usb_endp.o
-                0x08005770                EP2_IN_Callback
+                0x08005688       0x10 build\usb_hid\src\usb_endp.o
+                0x08005688                EP2_IN_Callback
  .text.USB_Init
-                0x08005780       0x44 build\usb_hid\src\usb_init.o
-                0x08005780                USB_Init
- .text.CTR_LP   0x080057c4      0x1b4 build\usb_hid\src\usb_int.o
-                0x080057c4                CTR_LP
+                0x08005698       0x44 build\usb_hid\src\usb_init.o
+                0x08005698                USB_Init
+ .text.CTR_LP   0x080056dc      0x1b4 build\usb_hid\src\usb_int.o
+                0x080056dc                CTR_LP
  .text.USB_Istr
-                0x08005978       0x58 build\usb_hid\src\usb_istr.o
-                0x08005978                USB_Istr
+                0x08005890       0x58 build\usb_hid\src\usb_istr.o
+                0x08005890                USB_Istr
  .text.UserToPMABufferCopy
-                0x080059d0       0x78 build\usb_hid\src\usb_mem.o
-                0x080059d0                UserToPMABufferCopy
+                0x080058e8       0x78 build\usb_hid\src\usb_mem.o
+                0x080058e8                UserToPMABufferCopy
  .text.PMAToUserBufferCopy
-                0x08005a48       0x50 build\usb_hid\src\usb_mem.o
-                0x08005a48                PMAToUserBufferCopy
+                0x08005960       0x50 build\usb_hid\src\usb_mem.o
+                0x08005960                PMAToUserBufferCopy
  .text.CustomHID_SetDeviceAddress
-                0x08005a98       0x10 build\usb_hid\src\usb_prop.o
-                0x08005a98                CustomHID_SetDeviceAddress
+                0x080059b0       0x10 build\usb_hid\src\usb_prop.o
+                0x080059b0                CustomHID_SetDeviceAddress
  .text.CustomHID_Status_Out
-                0x08005aa8        0x4 build\usb_hid\src\usb_prop.o
-                0x08005aa8                CustomHID_Status_Out
+                0x080059c0        0x4 build\usb_hid\src\usb_prop.o
+                0x080059c0                CustomHID_Status_Out
  .text.CustomHID_Data_Setup
-                0x08005aac       0x6c build\usb_hid\src\usb_prop.o
-                0x08005aac                CustomHID_Data_Setup
+                0x080059c4       0x6c build\usb_hid\src\usb_prop.o
+                0x080059c4                CustomHID_Data_Setup
  .text.CustomHID_SetReport_Feature
-                0x08005b18       0x18 build\usb_hid\src\usb_prop.o
-                0x08005b18                CustomHID_SetReport_Feature
+                0x08005a30       0x18 build\usb_hid\src\usb_prop.o
+                0x08005a30                CustomHID_SetReport_Feature
  .text.CustomHID_NoData_Setup
-                0x08005b30       0x28 build\usb_hid\src\usb_prop.o
-                0x08005b30                CustomHID_NoData_Setup
+                0x08005a48       0x28 build\usb_hid\src\usb_prop.o
+                0x08005a48                CustomHID_NoData_Setup
  .text.CustomHID_Get_Interface_Setting
-                0x08005b58        0xc build\usb_hid\src\usb_prop.o
-                0x08005b58                CustomHID_Get_Interface_Setting
+                0x08005a70        0xc build\usb_hid\src\usb_prop.o
+                0x08005a70                CustomHID_Get_Interface_Setting
  .text.CustomHID_GetProtocolValue
-                0x08005b64       0x18 build\usb_hid\src\usb_prop.o
-                0x08005b64                CustomHID_GetProtocolValue
+                0x08005a7c       0x18 build\usb_hid\src\usb_prop.o
+                0x08005a7c                CustomHID_GetProtocolValue
  .text.CustomHID_GetHIDDescriptor
-                0x08005b7c        0xc build\usb_hid\src\usb_prop.o
-                0x08005b7c                CustomHID_GetHIDDescriptor
+                0x08005a94        0xc build\usb_hid\src\usb_prop.o
+                0x08005a94                CustomHID_GetHIDDescriptor
  .text.CustomHID_GetReportDescriptor
-                0x08005b88        0xc build\usb_hid\src\usb_prop.o
-                0x08005b88                CustomHID_GetReportDescriptor
+                0x08005aa0        0xc build\usb_hid\src\usb_prop.o
+                0x08005aa0                CustomHID_GetReportDescriptor
  .text.CustomHID_GetStringDescriptor
-                0x08005b94       0x20 build\usb_hid\src\usb_prop.o
-                0x08005b94                CustomHID_GetStringDescriptor
+                0x08005aac       0x20 build\usb_hid\src\usb_prop.o
+                0x08005aac                CustomHID_GetStringDescriptor
  .text.CustomHID_GetConfigDescriptor
-                0x08005bb4        0xc build\usb_hid\src\usb_prop.o
-                0x08005bb4                CustomHID_GetConfigDescriptor
+                0x08005acc        0xc build\usb_hid\src\usb_prop.o
+                0x08005acc                CustomHID_GetConfigDescriptor
  .text.CustomHID_GetDeviceDescriptor
-                0x08005bc0        0xc build\usb_hid\src\usb_prop.o
-                0x08005bc0                CustomHID_GetDeviceDescriptor
+                0x08005ad8        0xc build\usb_hid\src\usb_prop.o
+                0x08005ad8                CustomHID_GetDeviceDescriptor
  .text.CustomHID_Status_In
-                0x08005bcc       0x88 build\usb_hid\src\usb_prop.o
-                0x08005bcc                CustomHID_Status_In
+                0x08005ae4       0x88 build\usb_hid\src\usb_prop.o
+                0x08005ae4                CustomHID_Status_In
  .text.CustomHID_Reset
-                0x08005c54       0xc0 build\usb_hid\src\usb_prop.o
-                0x08005c54                CustomHID_Reset
+                0x08005b6c       0xc0 build\usb_hid\src\usb_prop.o
+                0x08005b6c                CustomHID_Reset
  .text.CustomHID_init
-                0x08005d14       0x28 build\usb_hid\src\usb_prop.o
-                0x08005d14                CustomHID_init
+                0x08005c2c       0x28 build\usb_hid\src\usb_prop.o
+                0x08005c2c                CustomHID_init
  .text.CustomHID_SetConfiguration
-                0x08005d3c       0x28 build\usb_hid\src\usb_prop.o
-                0x08005d3c                CustomHID_SetConfiguration
- .text.PowerOn  0x08005d64       0x40 build\usb_hid\src\usb_pwr.o
-                0x08005d64                PowerOn
+                0x08005c54       0x28 build\usb_hid\src\usb_prop.o
+                0x08005c54                CustomHID_SetConfiguration
+ .text.PowerOn  0x08005c7c       0x40 build\usb_hid\src\usb_pwr.o
+                0x08005c7c                PowerOn
  .text.SetBTABLE
-                0x08005da4       0x14 build\usb_hid\src\usb_regs.o
-                0x08005da4                SetBTABLE
+                0x08005cbc       0x14 build\usb_hid\src\usb_regs.o
+                0x08005cbc                SetBTABLE
  .text.SetEPType
-                0x08005db8       0x18 build\usb_hid\src\usb_regs.o
-                0x08005db8                SetEPType
+                0x08005cd0       0x18 build\usb_hid\src\usb_regs.o
+                0x08005cd0                SetEPType
  .text.SetEPTxStatus
-                0x08005dd0       0x40 build\usb_hid\src\usb_regs.o
-                0x08005dd0                SetEPTxStatus
+                0x08005ce8       0x40 build\usb_hid\src\usb_regs.o
+                0x08005ce8                SetEPTxStatus
  .text.SetEPRxStatus
-                0x08005e10       0x40 build\usb_hid\src\usb_regs.o
-                0x08005e10                SetEPRxStatus
+                0x08005d28       0x40 build\usb_hid\src\usb_regs.o
+                0x08005d28                SetEPRxStatus
  .text.SetEPTxValid
-                0x08005e50       0x24 build\usb_hid\src\usb_regs.o
-                0x08005e50                SetEPTxValid
+                0x08005d68       0x24 build\usb_hid\src\usb_regs.o
+                0x08005d68                SetEPTxValid
  .text.SetEPRxValid
-                0x08005e74       0x24 build\usb_hid\src\usb_regs.o
-                0x08005e74                SetEPRxValid
+                0x08005d8c       0x24 build\usb_hid\src\usb_regs.o
+                0x08005d8c                SetEPRxValid
  .text.Clear_Status_Out
-                0x08005e98       0x20 build\usb_hid\src\usb_regs.o
-                0x08005e98                Clear_Status_Out
+                0x08005db0       0x20 build\usb_hid\src\usb_regs.o
+                0x08005db0                Clear_Status_Out
  .text.ClearDTOG_RX
-                0x08005eb8       0x24 build\usb_hid\src\usb_regs.o
-                0x08005eb8                ClearDTOG_RX
+                0x08005dd0       0x24 build\usb_hid\src\usb_regs.o
+                0x08005dd0                ClearDTOG_RX
  .text.ClearDTOG_TX
-                0x08005edc       0x24 build\usb_hid\src\usb_regs.o
-                0x08005edc                ClearDTOG_TX
+                0x08005df4       0x24 build\usb_hid\src\usb_regs.o
+                0x08005df4                ClearDTOG_TX
  .text.SetEPTxAddr
-                0x08005f00       0x24 build\usb_hid\src\usb_regs.o
-                0x08005f00                SetEPTxAddr
+                0x08005e18       0x24 build\usb_hid\src\usb_regs.o
+                0x08005e18                SetEPTxAddr
  .text.SetEPRxAddr
-                0x08005f24       0x28 build\usb_hid\src\usb_regs.o
-                0x08005f24                SetEPRxAddr
+                0x08005e3c       0x28 build\usb_hid\src\usb_regs.o
+                0x08005e3c                SetEPRxAddr
  .text.GetEPTxAddr
-                0x08005f4c       0x20 build\usb_hid\src\usb_regs.o
-                0x08005f4c                GetEPTxAddr
+                0x08005e64       0x20 build\usb_hid\src\usb_regs.o
+                0x08005e64                GetEPTxAddr
  .text.GetEPRxAddr
-                0x08005f6c       0x20 build\usb_hid\src\usb_regs.o
-                0x08005f6c                GetEPRxAddr
+                0x08005e84       0x20 build\usb_hid\src\usb_regs.o
+                0x08005e84                GetEPRxAddr
  .text.SetEPTxCount
-                0x08005f8c       0x20 build\usb_hid\src\usb_regs.o
-                0x08005f8c                SetEPTxCount
+                0x08005ea4       0x20 build\usb_hid\src\usb_regs.o
+                0x08005ea4                SetEPTxCount
  .text.SetEPRxCount
-                0x08005fac       0x44 build\usb_hid\src\usb_regs.o
-                0x08005fac                SetEPRxCount
+                0x08005ec4       0x44 build\usb_hid\src\usb_regs.o
+                0x08005ec4                SetEPRxCount
  .text.GetEPRxCount
-                0x08005ff0       0x24 build\usb_hid\src\usb_regs.o
-                0x08005ff0                GetEPRxCount
+                0x08005f08       0x24 build\usb_hid\src\usb_regs.o
+                0x08005f08                GetEPRxCount
  .text.ByteSwap
-                0x08006014        0xc build\usb_hid\src\usb_regs.o
-                0x08006014                ByteSwap
+                0x08005f2c        0xc build\usb_hid\src\usb_regs.o
+                0x08005f2c                ByteSwap
  .text.USB_SIL_Init
-                0x08006020       0x2c build\usb_hid\src\usb_sil.o
-                0x08006020                USB_SIL_Init
+                0x08005f38       0x2c build\usb_hid\src\usb_sil.o
+                0x08005f38                USB_SIL_Init
  .text.USB_SIL_Read
-                0x0800604c       0x24 build\usb_hid\src\usb_sil.o
-                0x0800604c                USB_SIL_Read
+                0x08005f64       0x24 build\usb_hid\src\usb_sil.o
+                0x08005f64                USB_SIL_Read
  .text.rt_tick_get
-                0x08006070        0xc build\src\clock.o
-                0x08006070                rt_tick_get
+                0x08005f88        0xc build\src\clock.o
+                0x08005f88                rt_tick_get
  .text.rt_tick_increase
-                0x0800607c       0x2c build\src\clock.o
-                0x0800607c                rt_tick_increase
+                0x08005f94       0x2c build\src\clock.o
+                0x08005f94                rt_tick_increase
  .text.rt_device_find
-                0x080060a8       0x5c build\src\device.o
-                0x080060a8                rt_device_find
+                0x08005fc0       0x5c build\src\device.o
+                0x08005fc0                rt_device_find
  .text.rt_device_register
-                0x08006104       0x2c build\src\device.o
-                0x08006104                rt_device_register
+                0x0800601c       0x2c build\src\device.o
+                0x0800601c                rt_device_register
  .text.rt_device_open
-                0x08006130       0xc4 build\src\device.o
-                0x08006130                rt_device_open
+                0x08006048       0xc4 build\src\device.o
+                0x08006048                rt_device_open
  .text.rt_device_close
-                0x080061f4       0x64 build\src\device.o
-                0x080061f4                rt_device_close
+                0x0800610c       0x64 build\src\device.o
+                0x0800610c                rt_device_close
  .text.rt_device_write
-                0x08006258       0x68 build\src\device.o
-                0x08006258                rt_device_write
+                0x08006170       0x68 build\src\device.o
+                0x08006170                rt_device_write
  .text.rt_thread_idle_excute
-                0x080062c0       0xb0 build\src\idle.o
-                0x080062c0                rt_thread_idle_excute
+                0x080061d8       0xb0 build\src\idle.o
+                0x080061d8                rt_thread_idle_excute
  .text.rt_thread_idle_entry
-                0x08006370       0x14 build\src\idle.o
+                0x08006288       0x14 build\src\idle.o
  .text.rt_thread_idle_init
-                0x08006384       0x48 build\src\idle.o
-                0x08006384                rt_thread_idle_init
+                0x0800629c       0x48 build\src\idle.o
+                0x0800629c                rt_thread_idle_init
  .text.rt_sem_init
-                0x080063cc       0x50 build\src\ipc.o
-                0x080063cc                rt_sem_init
+                0x080062e4       0x50 build\src\ipc.o
+                0x080062e4                rt_sem_init
  .text.rt_sem_create
-                0x0800641c       0x70 build\src\ipc.o
-                0x0800641c                rt_sem_create
+                0x08006334       0x70 build\src\ipc.o
+                0x08006334                rt_sem_create
  .text.rt_sem_take
-                0x0800648c      0x1a0 build\src\ipc.o
-                0x0800648c                rt_sem_take
+                0x080063a4      0x1a0 build\src\ipc.o
+                0x080063a4                rt_sem_take
  .text.rt_sem_release
-                0x0800662c       0x44 build\src\ipc.o
-                0x0800662c                rt_sem_release
+                0x08006544       0x44 build\src\ipc.o
+                0x08006544                rt_sem_release
  .text.rt_interrupt_enter
-                0x08006670       0x20 build\src\irq.o
-                0x08006670                rt_interrupt_enter
+                0x08006588       0x20 build\src\irq.o
+                0x08006588                rt_interrupt_enter
  .text.rt_interrupt_leave
-                0x08006690       0x20 build\src\irq.o
-                0x08006690                rt_interrupt_leave
+                0x080065a8       0x20 build\src\irq.o
+                0x080065a8                rt_interrupt_leave
  .text.rt_interrupt_get_nest
-                0x080066b0        0xc build\src\irq.o
-                0x080066b0                rt_interrupt_get_nest
+                0x080065c8        0xc build\src\irq.o
+                0x080065c8                rt_interrupt_get_nest
  .text.print_number
-                0x080066bc      0x278 build\src\kservice.o
+                0x080065d4      0x278 build\src\kservice.o
  .text.rt_set_errno
-                0x08006934       0x20 build\src\kservice.o
-                0x08006934                rt_set_errno
+                0x0800684c       0x20 build\src\kservice.o
+                0x0800684c                rt_set_errno
  .text.rt_memset
-                0x08006954       0xf0 build\src\kservice.o
-                0x08006954                rt_memset
-                0x08006954                memset
+                0x0800686c       0xf0 build\src\kservice.o
+                0x0800686c                rt_memset
+                0x0800686c                memset
  .text.rt_strncpy
-                0x08006a44       0x84 build\src\kservice.o
-                0x08006a44                rt_strncpy
+                0x0800695c       0x84 build\src\kservice.o
+                0x0800695c                rt_strncpy
  .text.rt_strncmp
-                0x08006ac8       0x5c build\src\kservice.o
-                0x08006ac8                rt_strncmp
+                0x080069e0       0x5c build\src\kservice.o
+                0x080069e0                rt_strncmp
  .text.rt_strlen
-                0x08006b24       0x18 build\src\kservice.o
-                0x08006b24                strlen
-                0x08006b24                rt_strlen
+                0x08006a3c       0x18 build\src\kservice.o
+                0x08006a3c                strlen
+                0x08006a3c                rt_strlen
  .text.rt_vsnprintf
-                0x08006b3c      0x4ac build\src\kservice.o
-                0x08006b3c                rt_vsnprintf
+                0x08006a54      0x4ac build\src\kservice.o
+                0x08006a54                rt_vsnprintf
  .text.rt_vsprintf
-                0x08006fe8       0x14 build\src\kservice.o
-                0x08006fe8                rt_vsprintf
-                0x08006fe8                vsprintf
+                0x08006f00       0x14 build\src\kservice.o
+                0x08006f00                rt_vsprintf
+                0x08006f00                vsprintf
  .text.rt_sprintf
-                0x08006ffc       0x20 build\src\kservice.o
-                0x08006ffc                sprintf
-                0x08006ffc                rt_sprintf
+                0x08006f14       0x20 build\src\kservice.o
+                0x08006f14                sprintf
+                0x08006f14                rt_sprintf
  .text.rt_console_set_device
-                0x0800701c       0x28 build\src\kservice.o
-                0x0800701c                rt_console_set_device
+                0x08006f34       0x28 build\src\kservice.o
+                0x08006f34                rt_console_set_device
  .text.rt_hw_console_output
-                0x08007044        0x4 build\src\kservice.o
-                0x08007044                rt_hw_console_output
+                0x08006f5c        0x4 build\src\kservice.o
+                0x08006f5c                rt_hw_console_output
  .text.rt_kprintf
-                0x08007048       0x58 build\src\kservice.o
-                0x08007048                rt_kprintf
+                0x08006f60       0x58 build\src\kservice.o
+                0x08006f60                rt_kprintf
  .text.rt_show_version
-                0x080070a0       0x4c build\src\kservice.o
-                0x080070a0                rt_show_version
+                0x08006fb8       0x4c build\src\kservice.o
+                0x08006fb8                rt_show_version
  .text.__rt_ffs
-                0x080070ec       0x40 build\src\kservice.o
-                0x080070ec                __rt_ffs
+                0x08007004       0x40 build\src\kservice.o
+                0x08007004                __rt_ffs
  .text.plug_holes
-                0x0800712c       0xe4 build\src\mem.o
+                0x08007044       0xe4 build\src\mem.o
  .text.rt_system_heap_init
-                0x08007210       0xd4 build\src\mem.o
-                0x08007210                rt_system_heap_init
+                0x08007128       0xd4 build\src\mem.o
+                0x08007128                rt_system_heap_init
  .text.rt_malloc
-                0x080072e4      0x224 build\src\mem.o
-                0x080072e4                rt_malloc
- .text.rt_free  0x08007508      0x174 build\src\mem.o
-                0x08007508                rt_free
+                0x080071fc      0x224 build\src\mem.o
+                0x080071fc                rt_malloc
+ .text.rt_free  0x08007420      0x174 build\src\mem.o
+                0x08007420                rt_free
  .text.rt_object_init
-                0x0800767c       0x4c build\src\object.o
-                0x0800767c                rt_object_init
+                0x08007594       0x4c build\src\object.o
+                0x08007594                rt_object_init
  .text.rt_object_detach
-                0x080076c8       0x5c build\src\object.o
-                0x080076c8                rt_object_detach
+                0x080075e0       0x5c build\src\object.o
+                0x080075e0                rt_object_detach
  .text.rt_object_allocate
-                0x08007724       0xa0 build\src\object.o
-                0x08007724                rt_object_allocate
+                0x0800763c       0xa0 build\src\object.o
+                0x0800763c                rt_object_allocate
  .text.rt_object_delete
-                0x080077c4       0x90 build\src\object.o
-                0x080077c4                rt_object_delete
+                0x080076dc       0x90 build\src\object.o
+                0x080076dc                rt_object_delete
  .text.rt_object_is_systemobject
-                0x08007854       0x3c build\src\object.o
-                0x08007854                rt_object_is_systemobject
+                0x0800776c       0x3c build\src\object.o
+                0x0800776c                rt_object_is_systemobject
  .text.rt_system_scheduler_init
-                0x08007890       0x58 build\src\scheduler.o
-                0x08007890                rt_system_scheduler_init
+                0x080077a8       0x58 build\src\scheduler.o
+                0x080077a8                rt_system_scheduler_init
  .text.rt_system_scheduler_start
-                0x080078e8       0x38 build\src\scheduler.o
-                0x080078e8                rt_system_scheduler_start
+                0x08007800       0x38 build\src\scheduler.o
+                0x08007800                rt_system_scheduler_start
  .text.rt_schedule
-                0x08007920       0xe0 build\src\scheduler.o
-                0x08007920                rt_schedule
+                0x08007838       0xe0 build\src\scheduler.o
+                0x08007838                rt_schedule
  .text.rt_schedule_insert_thread
-                0x08007a00       0x6c build\src\scheduler.o
-                0x08007a00                rt_schedule_insert_thread
+                0x08007918       0x6c build\src\scheduler.o
+                0x08007918                rt_schedule_insert_thread
  .text.rt_schedule_remove_thread
-                0x08007a6c       0x78 build\src\scheduler.o
-                0x08007a6c                rt_schedule_remove_thread
+                0x08007984       0x78 build\src\scheduler.o
+                0x08007984                rt_schedule_remove_thread
  .text.rt_enter_critical
-                0x08007ae4       0x1c build\src\scheduler.o
-                0x08007ae4                rt_enter_critical
+                0x080079fc       0x1c build\src\scheduler.o
+                0x080079fc                rt_enter_critical
  .text.rt_exit_critical
-                0x08007b00       0x34 build\src\scheduler.o
-                0x08007b00                rt_exit_critical
+                0x08007a18       0x34 build\src\scheduler.o
+                0x08007a18                rt_exit_critical
  .text.rt_thread_timeout
-                0x08007b34       0x80 build\src\thread.o
-                0x08007b34                rt_thread_timeout
+                0x08007a4c       0x80 build\src\thread.o
+                0x08007a4c                rt_thread_timeout
  .text.rt_thread_exit
-                0x08007bb4       0x60 build\src\thread.o
+                0x08007acc       0x60 build\src\thread.o
  .text._rt_thread_init.isra.0
-                0x08007c14       0xa0 build\src\thread.o
+                0x08007b2c       0xa0 build\src\thread.o
  .text.rt_thread_init
-                0x08007cb4       0x88 build\src\thread.o
-                0x08007cb4                rt_thread_init
+                0x08007bcc       0x88 build\src\thread.o
+                0x08007bcc                rt_thread_init
  .text.rt_thread_self
-                0x08007d3c        0xc build\src\thread.o
-                0x08007d3c                rt_thread_self
+                0x08007c54        0xc build\src\thread.o
+                0x08007c54                rt_thread_self
  .text.rt_thread_create
-                0x08007d48       0x4c build\src\thread.o
-                0x08007d48                rt_thread_create
+                0x08007c60       0x4c build\src\thread.o
+                0x08007c60                rt_thread_create
  .text.rt_thread_yield
-                0x08007d94       0x5c build\src\thread.o
-                0x08007d94                rt_thread_yield
+                0x08007cac       0x5c build\src\thread.o
+                0x08007cac                rt_thread_yield
  .text.rt_thread_suspend
-                0x08007df0       0x5c build\src\thread.o
-                0x08007df0                rt_thread_suspend
+                0x08007d08       0x5c build\src\thread.o
+                0x08007d08                rt_thread_suspend
  .text.rt_thread_sleep
-                0x08007e4c       0x74 build\src\thread.o
-                0x08007e4c                rt_thread_sleep
+                0x08007d64       0x74 build\src\thread.o
+                0x08007d64                rt_thread_sleep
  .text.rt_thread_delay
-                0x08007ec0        0x4 build\src\thread.o
-                0x08007ec0                rt_thread_delay
+                0x08007dd8        0x4 build\src\thread.o
+                0x08007dd8                rt_thread_delay
  .text.rt_thread_resume
-                0x08007ec4       0x70 build\src\thread.o
-                0x08007ec4                rt_thread_resume
+                0x08007ddc       0x70 build\src\thread.o
+                0x08007ddc                rt_thread_resume
  .text.rt_thread_startup
-                0x08007f34       0x88 build\src\thread.o
-                0x08007f34                rt_thread_startup
+                0x08007e4c       0x88 build\src\thread.o
+                0x08007e4c                rt_thread_startup
  .text.rt_timer_init
-                0x08007fbc       0x60 build\src\timer.o
-                0x08007fbc                rt_timer_init
+                0x08007ed4       0x60 build\src\timer.o
+                0x08007ed4                rt_timer_init
  .text.rt_timer_detach
-                0x0800801c       0x54 build\src\timer.o
-                0x0800801c                rt_timer_detach
+                0x08007f34       0x54 build\src\timer.o
+                0x08007f34                rt_timer_detach
  .text.rt_timer_start
-                0x08008070       0xe0 build\src\timer.o
-                0x08008070                rt_timer_start
+                0x08007f88       0xe0 build\src\timer.o
+                0x08007f88                rt_timer_start
  .text.rt_timer_stop
-                0x08008150       0x74 build\src\timer.o
-                0x08008150                rt_timer_stop
+                0x08008068       0x74 build\src\timer.o
+                0x08008068                rt_timer_stop
  .text.rt_timer_control
-                0x080081c4       0x64 build\src\timer.o
-                0x080081c4                rt_timer_control
+                0x080080dc       0x64 build\src\timer.o
+                0x080080dc                rt_timer_control
  .text.rt_timer_check
-                0x08008228       0x90 build\src\timer.o
-                0x08008228                rt_timer_check
+                0x08008140       0x90 build\src\timer.o
+                0x08008140                rt_timer_check
  .text.rt_system_timer_init
-                0x080082b8       0x10 build\src\timer.o
-                0x080082b8                rt_system_timer_init
+                0x080081d0       0x10 build\src\timer.o
+                0x080081d0                rt_system_timer_init
  .text.rt_system_timer_thread_init
-                0x080082c8        0x4 build\src\timer.o
-                0x080082c8                rt_system_timer_thread_init
+                0x080081e0        0x4 build\src\timer.o
+                0x080081e0                rt_system_timer_thread_init
  .text.rt_hw_stack_init
-                0x080082cc       0x60 build\libcpu\arm\cortex-m3\cpuport.o
-                0x080082cc                rt_hw_stack_init
+                0x080081e4       0x60 build\libcpu\arm\cortex-m3\cpuport.o
+                0x080081e4                rt_hw_stack_init
  .text.rt_hw_hard_fault_exception
-                0x0800832c       0xfc build\libcpu\arm\cortex-m3\cpuport.o
-                0x0800832c                rt_hw_hard_fault_exception
+                0x08008244       0xfc build\libcpu\arm\cortex-m3\cpuport.o
+                0x08008244                rt_hw_hard_fault_exception
  .text.rt_serial_close
-                0x08008428       0x58 build\components\drivers\serial\serial.o
+                0x08008340       0x58 build\components\drivers\serial\serial.o
  .text.rt_serial_open
-                0x08008480       0x58 build\components\drivers\serial\serial.o
+                0x08008398       0x58 build\components\drivers\serial\serial.o
  .text.rt_serial_init
-                0x080084d8       0x98 build\components\drivers\serial\serial.o
+                0x080083f0       0x98 build\components\drivers\serial\serial.o
  .text.rt_serial_control
-                0x08008570       0x68 build\components\drivers\serial\serial.o
+                0x08008488       0x68 build\components\drivers\serial\serial.o
  .text.rt_serial_write
-                0x080085d8      0x26c build\components\drivers\serial\serial.o
+                0x080084f0      0x26c build\components\drivers\serial\serial.o
  .text.rt_serial_read
-                0x08008844      0x1a0 build\components\drivers\serial\serial.o
+                0x0800875c      0x1a0 build\components\drivers\serial\serial.o
  .text.rt_hw_serial_register
-                0x080089e4       0x80 build\components\drivers\serial\serial.o
-                0x080089e4                rt_hw_serial_register
+                0x080088fc       0x80 build\components\drivers\serial\serial.o
+                0x080088fc                rt_hw_serial_register
  .text.rt_hw_serial_isr
-                0x08008a64       0x9c build\components\drivers\serial\serial.o
-                0x08008a64                rt_hw_serial_isr
+                0x0800897c       0x9c build\components\drivers\serial\serial.o
+                0x0800897c                rt_hw_serial_isr
  .text.rt_data_queue_init
-                0x08008b00       0x70 build\components\drivers\src\dataqueue.o
-                0x08008b00                rt_data_queue_init
+                0x08008a18       0x70 build\components\drivers\src\dataqueue.o
+                0x08008a18                rt_data_queue_init
  .text.rt_data_queue_push
-                0x08008b70      0x158 build\components\drivers\src\dataqueue.o
-                0x08008b70                rt_data_queue_push
- .text.atoi     0x08008cc8       0x5c build\components\libc\minilibc\stdlib.o
-                0x08008cc8                atoi
- .text.strncpy  0x08008d24        0x4 build\components\libc\minilibc\string.o
-                0x08008d24                strncpy
- .text.strcmp   0x08008d28       0x24 build\components\libc\minilibc\string.o
-                0x08008d28                strcmp
- .text.strncmp  0x08008d4c       0x5c build\components\libc\minilibc\string.o
-                0x08008d4c                strncmp
- .text.strchr   0x08008da8       0x28 build\components\libc\minilibc\string.o
-                0x08008da8                strchr
+                0x08008a88      0x158 build\components\drivers\src\dataqueue.o
+                0x08008a88                rt_data_queue_push
+ .text.atoi     0x08008be0       0x5c build\components\libc\minilibc\stdlib.o
+                0x08008be0                atoi
+ .text.strncpy  0x08008c3c        0x4 build\components\libc\minilibc\string.o
+                0x08008c3c                strncpy
+ .text.strcmp   0x08008c40       0x24 build\components\libc\minilibc\string.o
+                0x08008c40                strcmp
+ .text.strncmp  0x08008c64       0x5c build\components\libc\minilibc\string.o
+                0x08008c64                strncmp
+ .text.strchr   0x08008cc0       0x28 build\components\libc\minilibc\string.o
+                0x08008cc0                strchr
  *(.rodata)
- .rodata        0x08008dd0        0x8 build\drivers\usart.o
- .rodata        0x08008dd8       0x28 build\motor\src\pwm.o
+ .rodata        0x08008ce8        0x8 build\drivers\usart.o
+ .rodata        0x08008cf0       0x28 build\motor\src\pwm.o
  *(.rodata*)
  .rodata.str1.4
-                0x08008e00       0x21 build\applications\application.o
+                0x08008d18       0x21 build\applications\application.o
                                  0x24 (size before relaxing)
- *fill*         0x08008e21        0x3 00000000
+ *fill*         0x08008d39        0x3 00000000
  .rodata.str1.4
-                0x08008e24       0x4e build\applications\startup.o
+                0x08008d3c       0x4e build\applications\startup.o
                                  0x50 (size before relaxing)
- *fill*         0x08008e72        0x2 00000000
+ *fill*         0x08008d8a        0x2 00000000
  .rodata.str1.4
-                0x08008e74        0x6 build\drivers\board.o
+                0x08008d8c        0x6 build\drivers\board.o
                                   0x8 (size before relaxing)
- *fill*         0x08008e7a        0x2 00000000
+ *fill*         0x08008d92        0x2 00000000
  .rodata.__FUNCTION__.7400
-                0x08008e7c       0x10 build\drivers\usart.o
+                0x08008d94       0x10 build\drivers\usart.o
  .rodata.__FUNCTION__.7413
-                0x08008e8c        0xc build\drivers\usart.o
+                0x08008da4        0xc build\drivers\usart.o
  .rodata.__FUNCTION__.7426
-                0x08008e98        0xc build\drivers\usart.o
+                0x08008db0        0xc build\drivers\usart.o
  .rodata.stm32_uart_ops
-                0x08008ea4       0x14 build\drivers\usart.o
+                0x08008dbc       0x14 build\drivers\usart.o
  .rodata.str1.4
-                0x08008eb8       0x52 build\drivers\usart.o
+                0x08008dd0       0x52 build\drivers\usart.o
                                  0x5c (size before relaxing)
- *fill*         0x08008f0a        0x2 00000000
+ *fill*         0x08008e22        0x2 00000000
  .rodata.__FUNCTION__.7385
-                0x08008f0c       0x10 build\drivers\usart.o
+                0x08008e24       0x10 build\drivers\usart.o
  .rodata.str1.4
-                0x08008f1c       0x39 build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_rcc.o
+                0x08008e34       0x39 build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_rcc.o
                                  0x3c (size before relaxing)
- *fill*         0x08008f55        0x3 00000000
+ *fill*         0x08008e6d        0x3 00000000
  .rodata.str1.4
-                0x08008f58       0x3a build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_exti.o
+                0x08008e70       0x3a build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_exti.o
                                  0x3c (size before relaxing)
- *fill*         0x08008f92        0x2 00000000
+ *fill*         0x08008eaa        0x2 00000000
  .rodata.str1.4
-                0x08008f94       0x39 build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_adc.o
+                0x08008eac       0x39 build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_adc.o
                                  0x3c (size before relaxing)
- *fill*         0x08008fcd        0x3 00000000
+ *fill*         0x08008ee5        0x3 00000000
  .rodata.str1.4
-                0x08008fd0       0x39 build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_tim.o
+                0x08008ee8       0x39 build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_tim.o
                                  0x3c (size before relaxing)
- *fill*         0x08009009        0x3 00000000
+ *fill*         0x08008f21        0x3 00000000
  .rodata.str1.4
-                0x0800900c       0x3b build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_flash.o
+                0x08008f24       0x3b build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_flash.o
                                  0x3c (size before relaxing)
- *fill*         0x08009047        0x1 00000000
+ *fill*         0x08008f5f        0x1 00000000
  .rodata.str1.4
-                0x08009048       0x3a build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_gpio.o
+                0x08008f60       0x3a build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_gpio.o
                                  0x3c (size before relaxing)
- *fill*         0x08009082        0x2 00000000
+ *fill*         0x08008f9a        0x2 00000000
  .rodata.str1.4
-                0x08009084       0x3b build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_usart.o
+                0x08008f9c       0x3b build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_usart.o
                                  0x3c (size before relaxing)
- *fill*         0x080090bf        0x1 00000000
+ *fill*         0x08008fd7        0x1 00000000
  .rodata.str1.4
-                0x080090c0       0x39 build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_dma.o
+                0x08008fd8       0x39 build\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_dma.o
                                  0x3c (size before relaxing)
- *fill*         0x080090f9        0x3 00000000
+ *fill*         0x08009011        0x3 00000000
  .rodata.str1.4
-                0x080090fc       0x30 build\Libraries\STM32F10x_StdPeriph_Driver\src\misc.o
+                0x08009014       0x30 build\Libraries\STM32F10x_StdPeriph_Driver\src\misc.o
  .rodata.str1.4
-                0x0800912c       0x94 build\motor\src\adc.o
+                0x08009044       0x94 build\motor\src\adc.o
  .rodata.str1.4
-                0x080091c0      0x108 build\motor\src\cmd.o
+                0x080090d8      0x108 build\motor\src\cmd.o
  .rodata.str1.4
-                0x080092c8       0x1a build\motor\src\entry.o
+                0x080091e0       0x1a build\motor\src\entry.o
                                  0x1c (size before relaxing)
- *fill*         0x080092e2        0x2 00000000
+ *fill*         0x080091fa        0x2 00000000
  .rodata.str1.4
-                0x080092e4      0x171 build\motor\src\pwm.o
+                0x080091fc      0x171 build\motor\src\pwm.o
                                 0x17c (size before relaxing)
- *fill*         0x08009455        0x3 00000000
+ *fill*         0x0800936d        0x3 00000000
  .rodata.str1.4
-                0x08009458       0x54 build\motor\src\vout.o
+                0x08009370       0x54 build\motor\src\vout.o
                                  0x58 (size before relaxing)
  .rodata.str1.4
-                0x080094ac       0x8a build\motor\src\pga.o
-                                 0x8c (size before relaxing)
- *fill*         0x08009536        0x2 00000000
+                0x080093c4       0x7a build\motor\src\pga.o
+                                 0x7c (size before relaxing)
+ *fill*         0x0800943e        0x2 00000000
  .rodata.str1.4
-                0x08009538        0x4 build\usb_hid\src\entry.o
+                0x08009440        0x4 build\usb_hid\src\entry.o
  .rodata.GPIO_PIN
-                0x0800953c        0x8 build\usb_hid\src\stm3210b_eval.o
-                0x0800953c                GPIO_PIN
+                0x08009444        0x8 build\usb_hid\src\stm3210b_eval.o
+                0x08009444                GPIO_PIN
  .rodata.CustomHID_DeviceDescriptor
-                0x08009544       0x14 build\usb_hid\src\usb_desc.o
-                0x08009544                CustomHID_DeviceDescriptor
+                0x0800944c       0x14 build\usb_hid\src\usb_desc.o
+                0x0800944c                CustomHID_DeviceDescriptor
  .rodata.CustomHID_StringProduct
-                0x08009558       0x20 build\usb_hid\src\usb_desc.o
-                0x08009558                CustomHID_StringProduct
+                0x08009460       0x20 build\usb_hid\src\usb_desc.o
+                0x08009460                CustomHID_StringProduct
  .rodata.CustomHID_StringVendor
-                0x08009578       0x28 build\usb_hid\src\usb_desc.o
-                0x08009578                CustomHID_StringVendor
+                0x08009480       0x28 build\usb_hid\src\usb_desc.o
+                0x08009480                CustomHID_StringVendor
  .rodata.CustomHID_ReportDescriptor
-                0x080095a0       0xa4 build\usb_hid\src\usb_desc.o
-                0x080095a0                CustomHID_ReportDescriptor
+                0x080094a8       0xa4 build\usb_hid\src\usb_desc.o
+                0x080094a8                CustomHID_ReportDescriptor
  .rodata.CustomHID_ConfigDescriptor
-                0x08009644       0x2c build\usb_hid\src\usb_desc.o
-                0x08009644                CustomHID_ConfigDescriptor
+                0x0800954c       0x2c build\usb_hid\src\usb_desc.o
+                0x0800954c                CustomHID_ConfigDescriptor
  .rodata.CustomHID_StringLangID
-                0x08009670        0x4 build\usb_hid\src\usb_desc.o
-                0x08009670                CustomHID_StringLangID
+                0x08009578        0x4 build\usb_hid\src\usb_desc.o
+                0x08009578                CustomHID_StringLangID
  .rodata.__FUNCTION__.4689
-                0x08009674       0x10 build\src\device.o
+                0x0800957c       0x10 build\src\device.o
  .rodata.str1.4
-                0x08009684       0x5c build\src\device.o
+                0x0800958c       0x5c build\src\device.o
                                  0x7c (size before relaxing)
  .rodata.__FUNCTION__.4711
-                0x080096e0       0x10 build\src\device.o
+                0x080095e8       0x10 build\src\device.o
  .rodata.__FUNCTION__.4676
-                0x080096f0       0x10 build\src\device.o
+                0x080095f8       0x10 build\src\device.o
  .rodata.__FUNCTION__.4698
-                0x08009700       0x18 build\src\idle.o
+                0x08009608       0x18 build\src\idle.o
  .rodata.str1.4
-                0x08009718       0x2a build\src\idle.o
+                0x08009620       0x2a build\src\idle.o
                                  0x50 (size before relaxing)
- *fill*         0x08009742        0x2 00000000
+ *fill*         0x0800964a        0x2 00000000
  .rodata.__FUNCTION__.4744
-                0x08009744       0x10 build\src\ipc.o
+                0x0800964c       0x10 build\src\ipc.o
  .rodata.str1.4
-                0x08009754       0x47 build\src\ipc.o
+                0x0800965c       0x47 build\src\ipc.o
                                  0x90 (size before relaxing)
- *fill*         0x0800979b        0x1 00000000
+ *fill*         0x080096a3        0x1 00000000
  .rodata.__FUNCTION__.4769
-                0x0800979c        0xc build\src\ipc.o
+                0x080096a4        0xc build\src\ipc.o
  .rodata.__FUNCTION__.4725
-                0x080097a8        0xc build\src\ipc.o
+                0x080096b0        0xc build\src\ipc.o
  .rodata.small_digits.4848
-                0x080097b4       0x14 build\src\kservice.o
+                0x080096bc       0x14 build\src\kservice.o
  .rodata.large_digits.4849
-                0x080097c8       0x14 build\src\kservice.o
+                0x080096d0       0x14 build\src\kservice.o
  .rodata.str1.4
-                0x080097dc       0x8e build\src\kservice.o
+                0x080096e4       0x8e build\src\kservice.o
                                  0x90 (size before relaxing)
- *fill*         0x0800986a        0x2 00000000
+ *fill*         0x08009772        0x2 00000000
  .rodata.__lowest_bit_bitmap
-                0x0800986c      0x100 build\src\kservice.o
-                0x0800986c                __lowest_bit_bitmap
+                0x08009774      0x100 build\src\kservice.o
+                0x08009774                __lowest_bit_bitmap
  .rodata.__FUNCTION__.4736
-                0x0800996c       0x14 build\src\mem.o
+                0x08009874       0x14 build\src\mem.o
  .rodata.__FUNCTION__.4749
-                0x08009980        0xc build\src\mem.o
+                0x08009888        0xc build\src\mem.o
  .rodata.__FUNCTION__.4808
-                0x0800998c        0x8 build\src\mem.o
+                0x08009894        0x8 build\src\mem.o
  .rodata.str1.4
-                0x08009994      0x215 build\src\mem.o
+                0x0800989c      0x215 build\src\mem.o
                                 0x260 (size before relaxing)
- *fill*         0x08009ba9        0x3 00000000
+ *fill*         0x08009ab1        0x3 00000000
  .rodata.__FUNCTION__.4716
-                0x08009bac        0xc build\src\mem.o
+                0x08009ab4        0xc build\src\mem.o
  .rodata.__FUNCTION__.4745
-                0x08009bb8       0x14 build\src\object.o
+                0x08009ac0       0x14 build\src\object.o
  .rodata.__FUNCTION__.4755
-                0x08009bcc       0x14 build\src\object.o
+                0x08009ad4       0x14 build\src\object.o
  .rodata.str1.4
-                0x08009be0       0x3d build\src\object.o
+                0x08009ae8       0x3d build\src\object.o
                                  0x88 (size before relaxing)
- *fill*         0x08009c1d        0x3 00000000
+ *fill*         0x08009b25        0x3 00000000
  .rodata.__FUNCTION__.4767
-                0x08009c20       0x1c build\src\object.o
+                0x08009b28       0x1c build\src\object.o
  .rodata.__FUNCTION__.4733
-                0x08009c3c       0x14 build\src\object.o
+                0x08009b44       0x14 build\src\object.o
  .rodata.__FUNCTION__.4737
-                0x08009c50       0x1c build\src\scheduler.o
+                0x08009b58       0x1c build\src\scheduler.o
  .rodata.__FUNCTION__.4746
-                0x08009c6c       0x1c build\src\scheduler.o
+                0x08009b74       0x1c build\src\scheduler.o
  .rodata.__FUNCTION__.4705
-                0x08009c88       0x1c build\src\scheduler.o
+                0x08009b90       0x1c build\src\scheduler.o
  .rodata.str1.4
-                0x08009ca4       0x65 build\src\scheduler.o
+                0x08009bac       0x65 build\src\scheduler.o
                                  0x88 (size before relaxing)
- *fill*         0x08009d09        0x3 00000000
+ *fill*         0x08009c11        0x3 00000000
  .rodata.__FUNCTION__.4735
-                0x08009d0c       0x14 build\src\thread.o
+                0x08009c14       0x14 build\src\thread.o
  .rodata.__FUNCTION__.4811
-                0x08009d20       0x14 build\src\thread.o
+                0x08009c28       0x14 build\src\thread.o
  .rodata.__FUNCTION__.4704
-                0x08009d34       0x10 build\src\thread.o
+                0x08009c3c       0x10 build\src\thread.o
  .rodata.str1.4
-                0x08009d44       0x7f build\src\thread.o
+                0x08009c4c       0x7f build\src\thread.o
                                  0xb4 (size before relaxing)
- *fill*         0x08009dc3        0x1 00000000
+ *fill*         0x08009ccb        0x1 00000000
  .rodata.__FUNCTION__.4720
-                0x08009dc4       0x10 build\src\thread.o
+                0x08009ccc       0x10 build\src\thread.o
  .rodata.__FUNCTION__.4783
-                0x08009dd4       0x10 build\src\thread.o
+                0x08009cdc       0x10 build\src\thread.o
  .rodata.__FUNCTION__.4829
-                0x08009de4       0x14 build\src\thread.o
+                0x08009cec       0x14 build\src\thread.o
  .rodata.__FUNCTION__.4820
-                0x08009df8       0x14 build\src\thread.o
+                0x08009d00       0x14 build\src\thread.o
  .rodata.__FUNCTION__.4744
-                0x08009e0c       0x10 build\src\timer.o
+                0x08009d14       0x10 build\src\timer.o
  .rodata.__FUNCTION__.4753
-                0x08009e1c       0x10 build\src\timer.o
+                0x08009d24       0x10 build\src\timer.o
  .rodata.__FUNCTION__.4810
-                0x08009e2c       0x10 build\src\timer.o
+                0x08009d34       0x10 build\src\timer.o
  .rodata.__FUNCTION__.4820
-                0x08009e3c       0x14 build\src\timer.o
+                0x08009d44       0x14 build\src\timer.o
  .rodata.str1.4
-                0x08009e50       0x3b build\src\timer.o
+                0x08009d58       0x3b build\src\timer.o
                                  0x60 (size before relaxing)
- *fill*         0x08009e8b        0x1 00000000
+ *fill*         0x08009d93        0x1 00000000
  .rodata.__FUNCTION__.4785
-                0x08009e8c       0x10 build\src\timer.o
+                0x08009d94       0x10 build\src\timer.o
  .rodata.str1.4
-                0x08009e9c      0x149 build\libcpu\arm\cortex-m3\cpuport.o
+                0x08009da4      0x149 build\libcpu\arm\cortex-m3\cpuport.o
                                 0x170 (size before relaxing)
- *fill*         0x08009fe5        0x3 00000000
+ *fill*         0x08009eed        0x3 00000000
  .rodata.__FUNCTION__.4963
-                0x08009fe8       0x10 build\components\drivers\serial\serial.o
+                0x08009ef0       0x10 build\components\drivers\serial\serial.o
  .rodata.__FUNCTION__.4907
-                0x08009ff8       0x10 build\components\drivers\serial\serial.o
+                0x08009f00       0x10 build\components\drivers\serial\serial.o
  .rodata.__FUNCTION__.4918
-                0x0800a008       0x10 build\components\drivers\serial\serial.o
+                0x08009f10       0x10 build\components\drivers\serial\serial.o
  .rodata.__FUNCTION__.4986
-                0x0800a018       0x14 build\components\drivers\serial\serial.o
+                0x08009f20       0x14 build\components\drivers\serial\serial.o
  .rodata.str1.4
-                0x0800a02c       0x58 build\components\drivers\serial\serial.o
+                0x08009f34       0x58 build\components\drivers\serial\serial.o
                                  0x9c (size before relaxing)
  .rodata.__FUNCTION__.4942
-                0x0800a084       0x10 build\components\drivers\serial\serial.o
+                0x08009f8c       0x10 build\components\drivers\serial\serial.o
  .rodata.__FUNCTION__.5002
-                0x0800a094       0x18 build\components\drivers\serial\serial.o
+                0x08009f9c       0x18 build\components\drivers\serial\serial.o
  .rodata.__FUNCTION__.5011
-                0x0800a0ac       0x14 build\components\drivers\serial\serial.o
+                0x08009fb4       0x14 build\components\drivers\serial\serial.o
  .rodata.__FUNCTION__.4928
-                0x0800a0c0       0x10 build\components\drivers\serial\serial.o
+                0x08009fc8       0x10 build\components\drivers\serial\serial.o
  .rodata.__FUNCTION__.4903
-                0x0800a0d0       0x14 build\components\drivers\src\dataqueue.o
+                0x08009fd8       0x14 build\components\drivers\src\dataqueue.o
  .rodata.str1.4
-                0x0800a0e4       0x38 build\components\drivers\src\dataqueue.o
+                0x08009fec       0x38 build\components\drivers\src\dataqueue.o
                                  0x80 (size before relaxing)
  .rodata.__FUNCTION__.4888
-                0x0800a11c       0x14 build\components\drivers\src\dataqueue.o
+                0x0800a024       0x14 build\components\drivers\src\dataqueue.o
  *(.glue_7)
  .glue_7        0x00000000        0x0 linker stubs
  *(.glue_7t)
  .glue_7t       0x00000000        0x0 linker stubs
  *(.gnu.linkonce.t*)
-                0x0800a130                . = ALIGN (0x4)
-                0x0800a130                __fsymtab_start = .
+                0x0800a038                . = ALIGN (0x4)
+                0x0800a038                __fsymtab_start = .
  *(FSymTab)
-                0x0800a130                __fsymtab_end = .
-                0x0800a130                . = ALIGN (0x4)
-                0x0800a130                __vsymtab_start = .
+                0x0800a038                __fsymtab_end = .
+                0x0800a038                . = ALIGN (0x4)
+                0x0800a038                __vsymtab_start = .
  *(VSymTab)
-                0x0800a130                __vsymtab_end = .
-                0x0800a130                . = ALIGN (0x4)
-                0x0800a130                . = ALIGN (0x4)
-                0x0800a130                __rt_init_start = .
+                0x0800a038                __vsymtab_end = .
+                0x0800a038                . = ALIGN (0x4)
+                0x0800a038                . = ALIGN (0x4)
+                0x0800a038                __rt_init_start = .
  *(SORT(.rti_fn*))
-                0x0800a130                __rt_init_end = .
-                0x0800a130                . = ALIGN (0x4)
-                0x0800a130                . = ALIGN (0x4)
-                0x0800a130                _etext = .
-                0x0800a130                __exidx_start = .
+                0x0800a038                __rt_init_end = .
+                0x0800a038                . = ALIGN (0x4)
+                0x0800a038                . = ALIGN (0x4)
+                0x0800a038                _etext = .
+                0x0800a038                __exidx_start = .
 
-.vfp11_veneer   0x0800a130        0x0
+.vfp11_veneer   0x0800a038        0x0
  .vfp11_veneer  0x00000000        0x0 linker stubs
 
-.v4_bx          0x0800a130        0x0
+.v4_bx          0x0800a038        0x0
  .v4_bx         0x00000000        0x0 linker stubs
 
-.iplt           0x0800a130        0x0
+.iplt           0x0800a038        0x0
  .iplt          0x00000000        0x0 d:/gcc-arm-embed/bin/../lib/gcc/arm-none-eabi/4.7.3/armv7-m/crtbegin.o
 
-.rel.dyn        0x0800a130        0x0
+.rel.dyn        0x0800a038        0x0
  .rel.iplt      0x00000000        0x0 d:/gcc-arm-embed/bin/../lib/gcc/arm-none-eabi/4.7.3/armv7-m/crtbegin.o
 
-.ARM.exidx      0x0800a130        0x0
+.ARM.exidx      0x0800a038        0x0
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-                0x0800a130                _sidata = .
-                0x0800a130                __exidx_end = .
+                0x0800a038                _sidata = .
+                0x0800a038                __exidx_end = .
 
-.data           0x20000000      0x30c load address 0x0800a130
+.data           0x20000000      0x2e8 load address 0x0800a038
                 0x20000000                . = ALIGN (0x4)
                 0x20000000                _sdata = .
  *(.data)
@@ -3387,236 +3376,232 @@ LOAD d:/gcc-arm-embed/bin/../lib/gcc/arm-none-eabi/4.7.3/armv7-m/crtn.o
  .data.gAdc_cfg
                 0x20000070       0x20 build\motor\src\adc.o
                 0x20000070                gAdc_cfg
- .data.gSW      0x20000090        0x8 build\motor\src\adc.o
+ .data.gSW      0x20000090       0x20 build\motor\src\adc.o
                 0x20000090                gSW
- .data.SW_status
-                0x20000098        0x1 build\motor\src\adc.o
-                0x20000098                SW_status
- *fill*         0x20000099        0x3 00
- .data.gCalibr  0x2000009c       0x18 build\motor\src\cmd.o
-                0x2000009c                gCalibr
- .data.gF103    0x200000b4       0x38 build\motor\src\cmd.o
-                0x200000b4                gF103
+ .data.gCalibr  0x200000b0       0x18 build\motor\src\cmd.o
+                0x200000b0                gCalibr
+ .data.gF103    0x200000c8       0x38 build\motor\src\cmd.o
+                0x200000c8                gF103
  .data.gCounter_Pin
-                0x200000ec        0x8 build\motor\src\counter.o
-                0x200000ec                gCounter_Pin
- .data.gCounter_DirPin
-                0x200000f4        0x8 build\motor\src\counter.o
-                0x200000f4                gCounter_DirPin
- .data.gMotor   0x200000fc       0x28 build\motor\src\pwm.o
-                0x200000fc                gMotor
- .data.gPWM1    0x20000124       0x30 build\motor\src\pwm.o
-                0x20000124                gPWM1
- .data.gVout    0x20000154       0x20 build\motor\src\vout.o
-                0x20000154                gVout
+                0x20000100        0x8 build\motor\src\counter.o
+                0x20000100                gCounter_Pin
+ .data.gMotor   0x20000108       0x28 build\motor\src\pwm.o
+                0x20000108                gMotor
+ .data.gPWM1    0x20000130       0x30 build\motor\src\pwm.o
+                0x20000130                gPWM1
+ .data.gVout    0x20000160       0x20 build\motor\src\vout.o
+                0x20000160                gVout
  .data.Vout_Value
-                0x20000174        0x4 build\motor\src\vout.o
-                0x20000174                Vout_Value
+                0x20000180        0x4 build\motor\src\vout.o
+                0x20000180                Vout_Value
  .data.stable_time
-                0x20000178        0x4 build\motor\src\pga.o
-                0x20000178                stable_time
+                0x20000184        0x4 build\motor\src\pga.o
+                0x20000184                stable_time
  .data.gPGA_ports
-                0x2000017c       0x40 build\motor\src\pga.o
-                0x2000017c                gPGA_ports
+                0x20000188       0x10 build\motor\src\pga.o
+                0x20000188                gPGA_ports
  .data.PrevXferComplete
-                0x200001bc        0x1 build\usb_hid\src\entry.o
-                0x200001bc                PrevXferComplete
- *fill*         0x200001bd        0x3 00
+                0x20000198        0x1 build\usb_hid\src\entry.o
+                0x20000198                PrevXferComplete
+ *fill*         0x20000199        0x3 00
  .data.GPIO_PORT
-                0x200001c0       0x10 build\usb_hid\src\stm3210b_eval.o
-                0x200001c0                GPIO_PORT
+                0x2000019c       0x10 build\usb_hid\src\stm3210b_eval.o
+                0x2000019c                GPIO_PORT
  .data.CustomHID_StringSerial
-                0x200001d0       0x1c build\usb_hid\src\usb_desc.o
-                0x200001d0                CustomHID_StringSerial
+                0x200001ac       0x1c build\usb_hid\src\usb_desc.o
+                0x200001ac                CustomHID_StringSerial
  .data.pEpInt_IN
-                0x200001ec       0x1c build\usb_hid\src\usb_istr.o
-                0x200001ec                pEpInt_IN
+                0x200001c8       0x1c build\usb_hid\src\usb_istr.o
+                0x200001c8                pEpInt_IN
  .data.pEpInt_OUT
-                0x20000208       0x1c build\usb_hid\src\usb_istr.o
-                0x20000208                pEpInt_OUT
+                0x200001e4       0x1c build\usb_hid\src\usb_istr.o
+                0x200001e4                pEpInt_OUT
  .data.Config_Descriptor
-                0x20000224        0x8 build\usb_hid\src\usb_prop.o
-                0x20000224                Config_Descriptor
+                0x20000200        0x8 build\usb_hid\src\usb_prop.o
+                0x20000200                Config_Descriptor
  .data.Device_Property
-                0x2000022c       0x30 build\usb_hid\src\usb_prop.o
-                0x2000022c                Device_Property
+                0x20000208       0x30 build\usb_hid\src\usb_prop.o
+                0x20000208                Device_Property
  .data.User_Standard_Requests
-                0x2000025c       0x24 build\usb_hid\src\usb_prop.o
-                0x2000025c                User_Standard_Requests
+                0x20000238       0x24 build\usb_hid\src\usb_prop.o
+                0x20000238                User_Standard_Requests
  .data.CustomHID_Report_Descriptor
-                0x20000280        0x8 build\usb_hid\src\usb_prop.o
-                0x20000280                CustomHID_Report_Descriptor
+                0x2000025c        0x8 build\usb_hid\src\usb_prop.o
+                0x2000025c                CustomHID_Report_Descriptor
  .data.Device_Descriptor
-                0x20000288        0x8 build\usb_hid\src\usb_prop.o
-                0x20000288                Device_Descriptor
+                0x20000264        0x8 build\usb_hid\src\usb_prop.o
+                0x20000264                Device_Descriptor
  .data.String_Descriptor
-                0x20000290       0x20 build\usb_hid\src\usb_prop.o
-                0x20000290                String_Descriptor
+                0x2000026c       0x20 build\usb_hid\src\usb_prop.o
+                0x2000026c                String_Descriptor
  .data.CustomHID_Hid_Descriptor
-                0x200002b0        0x8 build\usb_hid\src\usb_prop.o
-                0x200002b0                CustomHID_Hid_Descriptor
+                0x2000028c        0x8 build\usb_hid\src\usb_prop.o
+                0x2000028c                CustomHID_Hid_Descriptor
  .data.Device_Table
-                0x200002b8        0x4 build\usb_hid\src\usb_prop.o
-                0x200002b8                Device_Table
+                0x20000294        0x4 build\usb_hid\src\usb_prop.o
+                0x20000294                Device_Table
  .data.rt_object_container
-                0x200002bc       0x50 build\src\object.o
-                0x200002bc                rt_object_container
+                0x20000298       0x50 build\src\object.o
+                0x20000298                rt_object_container
  *(.gnu.linkonce.d*)
-                0x2000030c                . = ALIGN (0x4)
-                0x2000030c                _edata = .
+                0x200002e8                . = ALIGN (0x4)
+                0x200002e8                _edata = .
 
-.igot.plt       0x2000030c        0x0 load address 0x0800a43c
+.igot.plt       0x200002e8        0x0 load address 0x0800a320
  .igot.plt      0x00000000        0x0 d:/gcc-arm-embed/bin/../lib/gcc/arm-none-eabi/4.7.3/armv7-m/crtbegin.o
 
-.stack          0x2000030c      0x400 load address 0x0800a43c
-                0x2000070c                . = (. + _system_stack_size)
- *fill*         0x2000030c      0x400 00
-                0x2000070c                . = ALIGN (0x4)
-                0x2000070c                _estack = .
-                0x2000070c                __bss_start = .
+.stack          0x200002e8      0x400 load address 0x0800a320
+                0x200006e8                . = (. + _system_stack_size)
+ *fill*         0x200002e8      0x400 00
+                0x200006e8                . = ALIGN (0x4)
+                0x200006e8                _estack = .
+                0x200006e8                __bss_start = .
 
-.bss            0x2000070c     0x152c load address 0x0800a83c
-                0x2000070c                . = ALIGN (0x4)
-                0x2000070c                _sbss = .
+.bss            0x200006e8     0x34f4 load address 0x0800a720
+                0x200006e8                . = ALIGN (0x4)
+                0x200006e8                _sbss = .
  *(.bss)
  *(.bss.*)
  .bss.led_stack
-                0x2000070c      0x200 build\applications\application.o
+                0x200006e8      0x200 build\applications\application.o
  .bss.led_thread
-                0x2000090c       0x78 build\applications\application.o
+                0x200008e8       0x78 build\applications\application.o
  .bss.gThermo_flag
-                0x20000984        0x4 build\motor\src\adc.o
-                0x20000984                gThermo_flag
- .bss.gSW_status
-                0x20000988        0x4 build\motor\src\adc.o
-                0x20000988                gSW_status
+                0x20000960        0x4 build\motor\src\adc.o
+                0x20000960                gThermo_flag
+ .bss.last_Yvalue
+                0x20000964        0x2 build\motor\src\adc.o
+                0x20000964                last_Yvalue
+ *fill*         0x20000966        0x2 00
  .bss.status_tim3
-                0x2000098c        0x4 build\motor\src\counter.o
-                0x2000098c                status_tim3
+                0x20000968        0x4 build\motor\src\counter.o
+                0x20000968                status_tim3
  .bss.pollar_flag
-                0x20000990        0x4 build\motor\src\pwm.o
-                0x20000990                pollar_flag
+                0x2000096c        0x4 build\motor\src\pwm.o
+                0x2000096c                pollar_flag
  .bss.zero_flag
-                0x20000994        0x4 build\motor\src\pwm.o
-                0x20000994                zero_flag
+                0x20000970        0x4 build\motor\src\pwm.o
+                0x20000970                zero_flag
+ .bss.value.7358
+                0x20000974        0x4 build\motor\src\pga.o
  .bss.TimingDelay
-                0x20000998        0x4 build\usb_hid\src\entry.o
-                0x20000998                TimingDelay
+                0x20000978        0x4 build\usb_hid\src\entry.o
+                0x20000978                TimingDelay
  .bss.Data_Mul_MaxPacketSize
-                0x2000099c        0x1 build\usb_hid\src\usb_core.o
-                0x2000099c                Data_Mul_MaxPacketSize
- *fill*         0x2000099d        0x3 00
+                0x2000097c        0x1 build\usb_hid\src\usb_core.o
+                0x2000097c                Data_Mul_MaxPacketSize
+ *fill*         0x2000097d        0x3 00
  .bss.sem_printf
-                0x200009a0        0x4 build\usb_hid\src\usb_endp.o
-                0x200009a0                sem_printf
- .bss.Request   0x200009a4        0x1 build\usb_hid\src\usb_prop.o
-                0x200009a4                Request
- *fill*         0x200009a5        0x3 00
+                0x20000980        0x4 build\usb_hid\src\usb_endp.o
+                0x20000980                sem_printf
+ .bss.Request   0x20000984        0x1 build\usb_hid\src\usb_prop.o
+                0x20000984                Request
+ *fill*         0x20000985        0x3 00
  .bss.bDeviceState
-                0x200009a8        0x4 build\usb_hid\src\usb_pwr.o
-                0x200009a8                bDeviceState
- .bss.rt_tick   0x200009ac        0x4 build\src\clock.o
- .bss.idle      0x200009b0       0x78 build\src\idle.o
+                0x20000988        0x4 build\usb_hid\src\usb_pwr.o
+                0x20000988                bDeviceState
+ .bss.rt_tick   0x2000098c        0x4 build\src\clock.o
+ .bss.idle      0x20000990       0x78 build\src\idle.o
  .bss.rt_thread_idle_hook
-                0x20000a28        0x4 build\src\idle.o
+                0x20000a08        0x4 build\src\idle.o
  .bss.rt_thread_stack
-                0x20000a2c      0x100 build\src\idle.o
- .bss._errno    0x20000b2c        0x4 build\src\kservice.o
+                0x20000a0c      0x100 build\src\idle.o
+ .bss._errno    0x20000b0c        0x4 build\src\kservice.o
  .bss.rt_log_buf.4957
-                0x20000b30       0x80 build\src\kservice.o
+                0x20000b10       0x80 build\src\kservice.o
  .bss._console_device
-                0x20000bb0        0x4 build\src\kservice.o
- .bss.lfree     0x20000bb4        0x4 build\src\mem.o
- .bss.used_mem  0x20000bb8        0x4 build\src\mem.o
+                0x20000b90        0x4 build\src\kservice.o
+ .bss.lfree     0x20000b94        0x4 build\src\mem.o
+ .bss.used_mem  0x20000b98        0x4 build\src\mem.o
  .bss.rt_malloc_hook
-                0x20000bbc        0x4 build\src\mem.o
+                0x20000b9c        0x4 build\src\mem.o
  .bss.mem_size_aligned
-                0x20000bc0        0x4 build\src\mem.o
- .bss.heap_end  0x20000bc4        0x4 build\src\mem.o
- .bss.heap_sem  0x20000bc8       0x20 build\src\mem.o
+                0x20000ba0        0x4 build\src\mem.o
+ .bss.heap_end  0x20000ba4        0x4 build\src\mem.o
+ .bss.heap_sem  0x20000ba8       0x20 build\src\mem.o
  .bss.rt_free_hook
-                0x20000be8        0x4 build\src\mem.o
- .bss.heap_ptr  0x20000bec        0x4 build\src\mem.o
- .bss.max_mem   0x20000bf0        0x4 build\src\mem.o
+                0x20000bc8        0x4 build\src\mem.o
+ .bss.heap_ptr  0x20000bcc        0x4 build\src\mem.o
+ .bss.max_mem   0x20000bd0        0x4 build\src\mem.o
  .bss.rt_object_attach_hook
-                0x20000bf4        0x4 build\src\object.o
+                0x20000bd4        0x4 build\src\object.o
  .bss.rt_object_detach_hook
-                0x20000bf8        0x4 build\src\object.o
+                0x20000bd8        0x4 build\src\object.o
  .bss.rt_scheduler_lock_nest
-                0x20000bfc        0x2 build\src\scheduler.o
- *fill*         0x20000bfe        0x2 00
+                0x20000bdc        0x2 build\src\scheduler.o
+ *fill*         0x20000bde        0x2 00
  .bss.rt_scheduler_hook
-                0x20000c00        0x4 build\src\scheduler.o
+                0x20000be0        0x4 build\src\scheduler.o
  .bss.rt_timer_list
-                0x20000c04        0x8 build\src\timer.o
+                0x20000be4        0x8 build\src\timer.o
  .bss.random_nr.4783
-                0x20000c0c        0x4 build\src\timer.o
+                0x20000bec        0x4 build\src\timer.o
  .bss.rt_timer_timeout_hook
-                0x20000c10        0x4 build\src\timer.o
+                0x20000bf0        0x4 build\src\timer.o
  .bss.rt_exception_hook
-                0x20000c14        0x4 build\libcpu\arm\cortex-m3\cpuport.o
+                0x20000bf4        0x4 build\libcpu\arm\cortex-m3\cpuport.o
  *(COMMON)
- COMMON         0x20000c18      0x240 build\drivers\usart.o
-                0x20000c18                uart3_int_rx
-                0x20000c5c                serial1
-                0x20000cd8                uart2_int_rx
-                0x20000d1c                serial3
-                0x20000d98                uart1_int_rx
-                0x20000ddc                serial2
- COMMON         0x20000e58      0x314 build\motor\src\adc.o
-                0x20000e58                gData
-                0x20000ef4                ad_sample_thread
-                0x20000f6c                ad_sample_stack
- COMMON         0x2000116c      0x6a4 build\motor\src\cmd.o
-                0x2000116c                gConsole
-                0x20001174                cmd_thread
-                0x200011ec                gCmd_dealer
-                0x20001610                cmd_stack
- COMMON         0x20001810      0x278 build\motor\src\pwm.o
-                0x20001810                event_thread
-                0x20001888                event_stack
- COMMON         0x20001a88        0x2 build\usb_hid\src\usb_core.o
-                0x20001a88                StatusInfo
- *fill*         0x20001a8a        0x2 00
- COMMON         0x20001a8c       0x32 build\usb_hid\src\usb_init.o
-                0x20001a8c                SaveState
-                0x20001a90                pProperty
-                0x20001a94                EPindex
-                0x20001a98                Device_Info
-                0x20001ab4                pUser_Standard_Requests
-                0x20001ab8                pInformation
-                0x20001abc                wInterrupt_Mask
- COMMON         0x20001abe        0x4 build\usb_hid\src\usb_int.o
-                0x20001abe                SaveRState
-                0x20001ac0                SaveTState
- COMMON         0x20001ac2        0x2 build\usb_hid\src\usb_istr.o
-                0x20001ac2                wIstr
- COMMON         0x20001ac4       0x45 build\usb_hid\src\usb_prop.o
-                0x20001ac4                ProtocolValue
-                0x20001ac8                Report_Buf
-                0x20001b08                EXTI_Enable
- COMMON         0x20001b09        0x1 build\src\irq.o
-                0x20001b09                rt_interrupt_nest
- *fill*         0x20001b0a        0x2 00
- COMMON         0x20001b0c        0xc build\src\object.o
-                0x20001b0c                rt_object_put_hook
-                0x20001b10                rt_object_take_hook
-                0x20001b14                rt_object_trytake_hook
- COMMON         0x20001b18      0x114 build\src\scheduler.o
-                0x20001b18                rt_thread_priority_table
-                0x20001c18                rt_current_priority
-                0x20001c1c                rt_current_thread
-                0x20001c20                rt_thread_ready_priority_group
-                0x20001c24                rt_thread_defunct
- COMMON         0x20001c2c        0xc build\libcpu\arm\cortex-m3\cpuport.o
-                0x20001c2c                rt_interrupt_to_thread
-                0x20001c30                rt_interrupt_from_thread
-                0x20001c34                rt_thread_switch_interrupt_flag
-                0x20001c38                . = ALIGN (0x4)
-                0x20001c38                _ebss = .
+ COMMON         0x20000bf8      0x240 build\drivers\usart.o
+                0x20000bf8                uart3_int_rx
+                0x20000c3c                serial1
+                0x20000cb8                uart2_int_rx
+                0x20000cfc                serial3
+                0x20000d78                uart1_int_rx
+                0x20000dbc                serial2
+ COMMON         0x20000e38     0x22d8 build\motor\src\adc.o
+                0x20000e38                gData
+                0x20002e98                ad_sample_thread
+                0x20002f10                ad_sample_stack
+ COMMON         0x20003110      0x6a4 build\motor\src\cmd.o
+                0x20003110                gConsole
+                0x20003118                cmd_thread
+                0x20003190                gCmd_dealer
+                0x200035b4                cmd_stack
+ COMMON         0x200037b4      0x278 build\motor\src\pwm.o
+                0x200037b4                event_thread
+                0x2000382c                event_stack
+ COMMON         0x20003a2c        0x2 build\usb_hid\src\usb_core.o
+                0x20003a2c                StatusInfo
+ *fill*         0x20003a2e        0x2 00
+ COMMON         0x20003a30       0x32 build\usb_hid\src\usb_init.o
+                0x20003a30                SaveState
+                0x20003a34                pProperty
+                0x20003a38                EPindex
+                0x20003a3c                Device_Info
+                0x20003a58                pUser_Standard_Requests
+                0x20003a5c                pInformation
+                0x20003a60                wInterrupt_Mask
+ COMMON         0x20003a62        0x4 build\usb_hid\src\usb_int.o
+                0x20003a62                SaveRState
+                0x20003a64                SaveTState
+ COMMON         0x20003a66        0x2 build\usb_hid\src\usb_istr.o
+                0x20003a66                wIstr
+ COMMON         0x20003a68       0x45 build\usb_hid\src\usb_prop.o
+                0x20003a68                ProtocolValue
+                0x20003a6c                Report_Buf
+                0x20003aac                EXTI_Enable
+ COMMON         0x20003aad        0x1 build\src\irq.o
+                0x20003aad                rt_interrupt_nest
+ *fill*         0x20003aae        0x2 00
+ COMMON         0x20003ab0        0xc build\src\object.o
+                0x20003ab0                rt_object_put_hook
+                0x20003ab4                rt_object_take_hook
+                0x20003ab8                rt_object_trytake_hook
+ COMMON         0x20003abc      0x114 build\src\scheduler.o
+                0x20003abc                rt_thread_priority_table
+                0x20003bbc                rt_current_priority
+                0x20003bc0                rt_current_thread
+                0x20003bc4                rt_thread_ready_priority_group
+                0x20003bc8                rt_thread_defunct
+ COMMON         0x20003bd0        0xc build\libcpu\arm\cortex-m3\cpuport.o
+                0x20003bd0                rt_interrupt_to_thread
+                0x20003bd4                rt_interrupt_from_thread
+                0x20003bd8                rt_thread_switch_interrupt_flag
+                0x20003bdc                . = ALIGN (0x4)
+                0x20003bdc                _ebss = .
  *(.bss.init)
-                0x20001c38                __bss_end = .
-                0x20001c38                _end = .
+                0x20003bdc                __bss_end = .
+                0x20003bdc                _end = .
 
 .stab
  *(.stab)
@@ -4518,7 +4503,6 @@ STM_EVAL_LEDToggle                                build\usb_hid\src\stm3210b_eva
 STM_EVAL_PBGetState                               build\usb_hid\src\stm3210b_eval.o
 STM_EVAL_PBInit                                   build\usb_hid\src\stm3210b_eval.o
 SVC_Handler                                       build\drivers\stm32f10x_it.o
-SW_status                                         build\motor\src\adc.o
 SaveRState                                        build\usb_hid\src\usb_int.o
                                                   build\usb_hid\src\usb_core.o
 SaveState                                         build\usb_hid\src\usb_init.o
@@ -4873,6 +4857,7 @@ _sbss                                             build\Libraries\CMSIS\CM3\Devi
 _sdata                                            build\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\gcc_ride7\startup_stm32f10x_md.o
 _sidata                                           build\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\gcc_ride7\startup_stm32f10x_md.o
 _start                                            d:/gcc-arm-embed/bin/../lib/gcc/arm-none-eabi/4.7.3/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+ad_buffer_init                                    build\motor\src\adc.o
 ad_sample_stack                                   build\motor\src\adc.o
                                                   build\applications\application.o
 ad_sample_thread                                  build\motor\src\adc.o
@@ -4944,12 +4929,14 @@ data_t_set_channel                                build\motor\src\adc.o
 data_t_set_interval                               build\motor\src\adc.o
 data_t_set_manual                                 build\motor\src\adc.o
 data_t_stop                                       build\motor\src\adc.o
+data_t_upload                                     build\motor\src\adc.o
 deal_cmd_                                         build\motor\src\cmd.o
 deal_cmd__                                        build\motor\src\cmd.o
                                                   build\motor\src\adc.o
 delay                                             build\motor\src\pga.o
 delay_loop                                        build\motor\src\adc.o
                                                   build\motor\src\ds18b20.o
+                                                  build\motor\src\pga.o
 ds18b20                                           build\motor\src\ds18b20.o
 ds18b20_init                                      build\motor\src\ds18b20.o
 ds18b20_reset                                     build\motor\src\ds18b20.o
@@ -4985,7 +4972,6 @@ gF103                                             build\motor\src\cmd.o
 gMotor                                            build\motor\src\pwm.o
                                                   build\motor\src\cmd.o
 gPGA_ports                                        build\motor\src\pga.o
-                                                  build\motor\src\adc.o
 gPWM1                                             build\motor\src\pwm.o
                                                   build\motor\src\counter.o
 gSW                                               build\motor\src\adc.o
@@ -5007,6 +4993,7 @@ isalpha                                           build\components\libc\minilibc
 isdigit                                           build\components\libc\minilibc\ctype.o
 isprint                                           build\components\libc\minilibc\ctype.o
 isspace                                           build\components\libc\minilibc\ctype.o
+last_Yvalue                                       build\motor\src\adc.o
 localtime                                         build\components\libc\minilibc\time.o
 localtime_r                                       build\components\libc\minilibc\time.o
 main                                              build\applications\startup.o
@@ -5522,7 +5509,6 @@ sem_printf                                        build\usb_hid\src\usb_endp.o
 serial1                                           build\drivers\usart.o
 serial2                                           build\drivers\usart.o
 serial3                                           build\drivers\usart.o
-set_SW                                            build\motor\src\adc.o
 set_calibr                                        build\motor\src\cmd.o
 simple_strtol                                     build\components\libc\minilibc\string.o
 simple_strtoll                                    build\components\libc\minilibc\string.o
@@ -5544,6 +5530,7 @@ status_tim3                                       build\motor\src\counter.o
 strcasecmp                                        build\src\kservice.o
 strcat                                            build\components\libc\minilibc\string.o
 strchr                                            build\components\libc\minilibc\string.o
+                                                  build\motor\src\pga.o
                                                   build\motor\src\cmd.o
 strcmp                                            build\components\libc\minilibc\string.o
                                                   build\motor\src\cmd.o
@@ -5568,13 +5555,7 @@ strstr                                            build\src\kservice.o
 strtok                                            build\components\libc\minilibc\string.o
 strtok_r                                          build\components\libc\minilibc\string.o
 swR_init                                          build\motor\src\adc.o
-switch_232                                        build\motor\src\adc.o
-switch_485                                        build\motor\src\adc.o
-switch_CAN                                        build\motor\src\adc.o
-switch_NTC                                        build\motor\src\adc.o
-switch_R                                          build\motor\src\adc.o
 switch_RAT                                        build\motor\src\adc.o
-switch_UI                                         build\motor\src\adc.o
 t1c1_init                                         build\motor\src\vout.o
 temp_read_byte                                    build\motor\src\ds18b20.o
 temp_trig                                         build\motor\src\ds18b20.o
@@ -5611,5 +5592,4 @@ wInterrupt_Mask                                   build\usb_hid\src\usb_sil.o
 wIstr                                             build\usb_hid\src\usb_istr.o
                                                   build\usb_hid\src\usb_int.o
 write_sport                                       build\motor\src\pga.o
-                                                  build\motor\src\adc.o
 zero_flag                                         build\motor\src\pwm.o

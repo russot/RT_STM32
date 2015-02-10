@@ -38,9 +38,9 @@ typedef struct{
 }cmd_dealer_t;
 
 #define AD_CH_NUM 6
-#define DATA_LEN 4
+#define DATA_LEN 6
 #define BUFF_LEN 64 //mMaxPacketSize of USB bulk is 64Bytes
-#define DATA_NUM  (BUFF_LEN/DATA_LEN)-1
+#define DATA_NUM  ((BUFF_LEN-4)/DATA_LEN)
 #define AD_BUFF_LEN 128
 typedef struct{
 	__IO uint16_t length;
@@ -67,8 +67,6 @@ typedef struct{
 	__IO int delay;
 	__IO uint16_t ADC_[AD_CH_NUM];
 	__IO int counter1_sample;
-	//__IO uint16_t ADC_sample[AD_CH_NUM];
-	//__IO data_pair_t ADC_sample_group[DATA_NUM];
 	__IO int channel;
 	__IO int manual_flag;
 	__IO int sample_flag;
@@ -104,11 +102,14 @@ typedef struct{
 	int running_flag;
 	int auto_flag;
 	uint16_t min_circle;
-	uint16_t pwm_circle 
+	uint16_t pwm_circle;
 } pwm_t;
 
 typedef struct{
-	port_pin_t swR_pin;
+	port_pin_t sw_232_pin;
+	port_pin_t sw_CAN_pin;
+	port_pin_t swU_IR_pin;
+	port_pin_t swUI_R_pin;
 } sw_t;
 
 typedef struct{
@@ -118,9 +119,6 @@ typedef struct{
 
 typedef struct{
 	sp_port_t R;
-	sp_port_t A;
-	sp_port_t B;
-	sp_port_t SW;
 } pga_t;
 
 extern int cmd_dealer_init(void);

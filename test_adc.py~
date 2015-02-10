@@ -38,9 +38,6 @@ class Serial_writer(threading.Thread):
 		self.serial.write("adc:swt:R")
 		time.sleep(0.01)
 		print "swt:R"
-		time.sleep(0.1)
-		self.serial.write("adc:pga:R:64")
-		time.sleep(0.1)
 	#	print "pga: R=64"
 	#	self.serial.write("adc:pga:A:2")
 	#	time.sleep(0.1)
@@ -74,22 +71,69 @@ class Serial_writer(threading.Thread):
 	#	time.sleep(0.1)
 	#	print "pga: A=2"
 	#	os.system("pause")
-		self.serial.write("adc:pga:A:1")
+		self.serial.write("adc:swt:R")
 		time.sleep(0.1)
-		print "pga: A=2"
-		#os.system("pause")
+		print "adc:swt:R"
+		os.system("pause")
+		self.serial.write("adc:pga:r:255:a:128")
+		time.sleep(0.1)
+		print "pga: adc:pga:r:255:a:0"
+		os.system("pause")
+		self.serial.write("adc:pga:r:8:a:0")
+		time.sleep(0.1)
+		print "pga: adc:pga:r:8:a:0"
+		os.system("pause")
+		self.serial.write("adc:pga:R:65280")
+		time.sleep(0.1)
+		print "pga: adc:pga:R:65280"
+		os.system("pause")
+		self.serial.write("adc:pga:R:255")
+		time.sleep(0.1)
+		print "pga: adc:pga:R:255"
+		os.system("pause")
+		time.sleep(0.1)
+		os.system("pause")
+		self.serial.write("adc:pga:r:65280:a:240")
+		time.sleep(0.1)
+		print "pga: adc:pga:r:65280:a:240"
+		os.system("pause")
+		self.serial.write("adc:swt:U")
+		time.sleep(0.1)
+		print "adc:swt:U"
+		os.system("pause")
+		self.serial.write("adc:swt:I")
+		time.sleep(0.1)
+		print "adc:swt:I"
+		os.system("pause")
+		self.serial.write("adc:swt:C")
+		time.sleep(0.1)
+		print "adc:swt:C"
+		os.system("pause")
+		self.serial.write("adc:swt:4")
+		time.sleep(0.1)
+		print "adc:swt:4"
+		os.system("pause")
+		self.serial.write("adc:swt:2")
+		time.sleep(0.1)
+		print "adc:swt:2"
+		os.system("pause")
 		self.serial.write("adc:cfg:manual:Y")
 		time.sleep(0.01)
 		self.serial.write("adc:cfg:interval:8000")
 		time.sleep(0.01)
 		self.serial.write("adc:cfg:channel:0") #channel_3 is PT1000_Vout
 		time.sleep(0.01)
-		self.serial.write("adc:run:")
+		os.system("pause")
+		time.sleep(0.1)
+		print "adc:swt:R"
+		os.system("pause")
+		self.serial.write("adc:pga:r:240:a:16")
+		time.sleep(0.1)
+		print "pga: adc:pga:r:240:a:16"
 		os.system("pause")
 		time.sleep(330.01)
 		while True:
-			self.serial.write("adc:stop:")
-			time.sleep(35.1)
+			time.sleep(0.1)
 #			self.serial.write("motor:auto:Y\0")
 #			time.sleep(1.001)
 #			self.serial.write("motor:setup:90\0")
@@ -108,6 +152,7 @@ class Serial_reader(threading.Thread):
 		threading.Thread.__init__(self)
 		self.serial = serial
 		self.count = 0
+		self.logfile= ''
 
 	def get_usb_data(self):
 		try:
@@ -122,13 +167,13 @@ class Serial_reader(threading.Thread):
 			out = '0x:'
 			for data in datas:
 				out += '%04x'%data
-			#print >> self.logfile,out
-			#print out
+			print >> self.logfile,out
+			print out
 
 
 			self.count +=1
 		except Exception,e:
-			print e
+			#print e
 			pass
 	def run(self):
 		print "read start..\n", self.serial

@@ -96,10 +96,10 @@ void  tim2_init(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(gCounter_Pin.port, &GPIO_InitStructure);
 	
-	GPIO_InitStructure.GPIO_Pin = gCounter_DirPin.pin;  
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(gCounter_DirPin.port, &GPIO_InitStructure);
+	//GPIO_InitStructure.GPIO_Pin = gCounter_DirPin.pin;  
+	//GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	//GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	//GPIO_Init(gCounter_DirPin.port, &GPIO_InitStructure);
 
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 	/*供给系统时钟*/

@@ -16,6 +16,7 @@
 #include "stm32f10x_tim.h"
 #include "stm32f10x_adc.h"
 #include <string.h>
+#include <math.h>
 #include "cmd_type.h"
 #define SW_R	0
 #define SW_UI 	1
@@ -25,12 +26,15 @@
 #define SW_485 	5
 int gSW_status = SW_R;
 extern pga_t gPGA_ports;
-int write_sport(sp_port_t * pSPort, uint8_t value);
+int write_sport(sp_port_t * pSPort, uint32_t value);
 void data_t_init(void);
 int gThermo_flag=UNSET_;
 data_t gData;
 sw_t gSW={
-	{GPIOC, GPIO_Pin_15}	// swR_pin
+	{GPIOC, GPIO_Pin_14},	// sw_232_pin
+	{GPIOC, GPIO_Pin_13},	// sw_CAN_pin
+	{GPIOB, GPIO_Pin_15},	// swU_IR_pin
+	{GPIOB, GPIO_Pin_14},	// swUI_R_pin
 	};
 
 #define ADC1_DR_Address    ((uint32_t)0x4001244C)
@@ -44,7 +48,7 @@ sw_t gSW={
 #define ADC1_ON()  ADC1->CR2 |= ADC_CR2_ADON
 #define ADC1_JSW_START() ADC1->CR2 |= ADC_CR2_JSWSTART
 
-void delay_loop(int ticks_)
+void delay_loop(__IO int ticks_)
 {
 	while(1){
 		if (ticks_ == 0)
@@ -128,113 +132,46 @@ void data_t_set_channel(char* cmd)
 	gData.channel = atoi(cmd); // delay for speeding up
 }
 
-char SW_status=0x0e;
-void set_SW(char index, char value)
-{
-	// switch3 status stored below
-	if (value == SET_){
-		SW_status |= 0x1<<index;
-	}else{
-		SW_status &= ~(0x1<<index);
-	}
-}
 
-#define set_R_on()	 GPIO_ResetBits(gSW.swR_pin.port,gSW.swR_pin.pin)
-#define set_R_off()	 GPIO_SetBits(gSW.swR_pin.port,gSW.swR_pin.pin)
-#define set_NTC_off()	 set_SW(0, UNSET_)
-#define set_NTC_on()	 set_SW(0, SET_)
-#define set_CAN_off()	 set_SW(1, SET_)
-#define set_CAN_on()	 set_SW(1, UNSET_)
-#define set_COM_off()	 set_SW(2, SET_)
-#define set_COM_on()	 set_SW(2, UNSET_)
-#define set_232_off()	 set_SW(3, SET_)
-#define set_232_on()	 set_SW(3, UNSET_)
-void switch_485(void)
-{
-	set_COM_on();
-	set_CAN_off();
-	set_232_off();
-	write_sport(&gPGA_ports.SW,SW_status);
-	gSW_status = SW_485;
-}
-void switch_232(void)
-{
-	set_COM_on();
-	set_CAN_off();
-	set_232_on();
-	write_sport(&gPGA_ports.SW,SW_status);
-	gSW_status = SW_232;
-}
-void switch_CAN(void)
-{
-	set_COM_on();
-	set_232_off();
-	set_CAN_on();
-	write_sport(&gPGA_ports.SW,SW_status);
-	gSW_status = SW_CAN;
-}
-void switch_NTC(void)
-{
-	set_COM_off();
-	set_CAN_off();
-	set_232_off();
-	set_NTC_on();
-	write_sport(&gPGA_ports.SW,SW_status);
-	gSW_status = SW_NTC;
-}
-void switch_R(void)
-{
-	set_COM_off();
-	set_CAN_off();
-	set_232_off();
-	set_NTC_off();
-	set_R_on();
-	write_sport(&gPGA_ports.SW,SW_status);
-	gSW_status = SW_R;
-}
-void switch_UI(void)
-{
-	set_COM_off();
-	set_CAN_off();
-	set_232_off();
-	set_NTC_off();
-	set_R_off();
-	write_sport(&gPGA_ports.SW,SW_status);
-	gSW_status = SW_UI;
-}
+#define set_485_on	 GPIO_SetBits(gSW.sw_CAN_pin.port,gSW.sw_CAN_pin.pin)
+#define set_CAN_on	 GPIO_ResetBits(gSW.sw_CAN_pin.port,gSW.sw_CAN_pin.pin)
+#define set_232_off	 GPIO_SetBits(gSW.sw_232_pin.port,gSW.sw_232_pin.pin)
+#define set_232_on	 GPIO_ResetBits(gSW.sw_232_pin.port,gSW.sw_232_pin.pin)
+#define set_IN_U	 GPIO_SetBits(gSW.swU_IR_pin.port,gSW.swU_IR_pin.pin)
+#define set_IN_IR	 GPIO_ResetBits(gSW.swU_IR_pin.port,gSW.swU_IR_pin.pin)
+#define set_SW_UI	 GPIO_SetBits(gSW.swUI_R_pin.port,gSW.swUI_R_pin.pin)
+#define set_SW_R	 GPIO_ResetBits(gSW.swUI_R_pin.port,gSW.swUI_R_pin.pin)
+#define sw_485		 set_232_off;set_485_on;
+#define sw_CAN	 	set_232_off;set_CAN_on;
+#define sw_232		 set_232_on
+#define sw_U		 sw_CAN;set_IN_U;set_SW_UI;
+#define sw_I		 sw_CAN;set_IN_IR;set_SW_UI;
+#define sw_R		 sw_CAN;set_IN_IR;set_SW_R;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void switch_RAT(char* cmd)
 {
 	switch  (*cmd){
 		case 'R': // setup as R input
-			switch_R();
+			sw_R;
 			break;
 		case 'U': // setup as A1 or A2 channel 
-			switch_UI();
+			sw_U;
 			break;
 		case 'I': // setup as NTC channel
-			switch_UI();
-			break;
-		case 'N':
-			switch_NTC();
-			if (*(cmd+1)=='T' && *(cmd+2)=='C')
-				switch_NTC();
+			sw_I;
 			break;
 		case 'C':
-			switch_CAN();
 			if (*(cmd+1)=='A' && *(cmd+2)=='N')
-				switch_CAN();
+				sw_CAN;
 			break;
 		case '4':
-			switch_485();
 			if (*(cmd+1)=='8' && *(cmd+2)=='5')
-				switch_485();
+				sw_485;
 			break;
 		case '2':
-			switch_232();
 			if (*(cmd+1)=='3' && *(cmd+2)=='2')
-				switch_232();
+				sw_232;
 			break;
 		default :
 			rt_kprintf("switch_RAT bad parameter ...! should be R|U|I|NTC|CAN|485|232 \r\n");
@@ -288,13 +225,19 @@ void data_t_reset(void)
 //uint16_t filter_buffer[filter_size];
 #define SMP_DELAY 10
 #define DATA0_ADDR &(gData.ad_buffer._buffer[gData.ad_buffer.head].slot[2])
-#define DATAn_ADDR &(gData.ad_buffer._buffer[gData.ad_buffer.head].slot[31])
+#define DATAn_ADDR &(gData.ad_buffer._buffer[gData.ad_buffer.head].slot[29])
+#define VALUEX *(gData.ad_buffer.current + 0)
+#define VALUEY *(gData.ad_buffer.current + 1)
+#define COUNT  *(gData.ad_buffer.current + 2)
+uint16_t last_Yvalue=0;
 void data_t_sample(void) {
 	int i;
 	uint32_t sum;
 	uint32_t signal;
 	uint8_t channel;
 	uint8_t x10_flag;
+	uint16_t current_Yvalue;
+	
 	if (gData.channel ==0 && gData.ADC_[1] < 0xfff){
 		channel =  1;
 		x10_flag = SET_;
@@ -307,37 +250,31 @@ void data_t_sample(void) {
 		sum +=  (gData.ADC_[channel] & 0xfff); // sampling data from DMA-memory area gData.ADC_
 		delay_loop(SMP_DELAY); // delay sometime for next sample
 	}
-	if (gData.manual_flag == SET_){// select current  length
-		*(gData.ad_buffer.current) = 0xffff; // manual mode, set to 0 
-	}else{
-		*(gData.ad_buffer.current) = gData.counter1; // manual mode, set to 0 
-	}
 	if (x10_flag==SET_)
-		*(gData.ad_buffer.current + 1) = (sum / filter_size) | (0x1<<15);
+		current_Yvalue = (sum / filter_size) | (0x1<<15);
 	else
-		*(gData.ad_buffer.current + 1) = (sum / filter_size) ;
-	//*(gData.current + 1) = 0x55aa;
-	//*(pData++)  = 0x55;
-	//*(pData++)  = 0xaa;
-	//if (x10_flag==SET_)
-	//	gData.ADC_sample_group[gData.current].signal = (sum / filter_size) | (0x1<<15);
-	//else
-	//	gData.ADC_sample_group[gData.current].signal = sum / filter_size;
-//		if (    (gData.channel== 0) && NOT_OVER_FLOW(_A1) ){ // select current signal 
-//			gData.ADC_sample_group[gData.current].signal = (_A1 & 0xfff)| (0x1<<15); // set bit15 flag implying _A1 value
-//		}else{
-//			gData.ADC_sample_group[gData.current].signal = sum / filter_size;
-//		}
-	
-	gData.ad_buffer.current += 2;
-	if ( (gData.ad_buffer.current > DATAn_ADDR)  ){ // running mode, upload 7 samples once; stopped mode, upload every sample
-		gData.ad_buffer.head += 1;// first,adjust  write_slot 
-		if (gData.ad_buffer.head == AD_BUFF_LEN)
-			gData.ad_buffer.head = 0;
-		gData.ad_buffer.current = DATA0_ADDR; // second, adjust write_head(index)
-		gData.need_upload_flag = SET_;
+		current_Yvalue = (sum / filter_size) ;
+	if (abs(current_Yvalue-last_Yvalue) > 2 || COUNT > 256){ // new value 
+		gData.ad_buffer.current += 3; //point to  next item
+		if ( (gData.ad_buffer.current > DATAn_ADDR)  ){ // one slot stuffed
+			gData.ad_buffer.head += 1;// first,adjust  write_slot 
+			if (gData.ad_buffer.head == AD_BUFF_LEN)
+				gData.ad_buffer.head = 0;
+			gData.ad_buffer.current = DATA0_ADDR; // second, adjust write_head(index)
+			gData.need_upload_flag = SET_;  // set flag to start upload later
+		}
+		if(gData.manual_flag == SET_){// set current  length
+			*(gData.ad_buffer.current) = 0xffff; // manual mode, set to 0 
+		}else{
+			*(gData.ad_buffer.current) = gData.counter1; // auto mode, set to pulse counter 
+		}
+		VALUEY = current_Yvalue;
+		COUNT  = 1; //for new value , set count to 1
+	}else{
+		VALUEY = current_Yvalue;
+		COUNT += 1; //for new value , set count to 1
 	}
-	//gData.sample_flag = SET_;
+	last_Yvalue = current_Yvalue;
 }
 
 // loop buffer init
@@ -351,6 +288,7 @@ void ad_buffer_init(void)
 	gData.ad_buffer.head = 0; 
 	gData.ad_buffer.tail = 0;
 	gData.ad_buffer.current = &(gData.ad_buffer._buffer[0].slot[2]); //'0x::.......................'
+	*(gData.ad_buffer.current + 2)  = 1; //for new value , set count to 1
 }
 
 
@@ -402,12 +340,14 @@ void swR_init(void)
 	RCC_SW_init();
 	GPIO_InitTypeDef GPIO_InitStructure;
 	int i=0;
-	port_pin_t* pSWR = (port_pin_t*) &gSW;
-	/* Configure PC13/14/15 as swA1A2 swR swNTC */
-	GPIO_InitStructure.GPIO_Pin = pSWR->pin;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_Init(pSWR->port, &GPIO_InitStructure);
+	port_pin_t *pPin = (port_pin_t*) &gSW; 
+	for(i=0;i<4;i++){
+		GPIO_InitStructure.GPIO_Pin = pPin->pin ;
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+		GPIO_Init(pPin->port, &GPIO_InitStructure);
+		pPin++;
+	}
 }
 void pga_init(void);
 ///////////////////////////////////////////////////////////////////////////////////
@@ -468,10 +408,10 @@ void DMA_ADC_init(void)
 
 void status_init()
 {
-	set_COM_off();//com relay off
-	set_CAN_off();//can relay off
-	set_232_off();//232 relay off
-	switch_R();
+	//set_COM_off();//com relay off
+	set_CAN_on;//can relay off
+	set_232_off;//232 relay off
+	sw_R;
 }
 void ds18b20_init(void);
 ///////////////////////////////////////////////////////////////////////////////////
@@ -546,28 +486,14 @@ void sample_temp(void)
 	status = gSW_status;
 	//switch_NTC();
  	/*Warning: sleep 1ms to be stable */
-	rt_thread_delay( RT_TICK_PER_SECOND/1000);
-	PT  = gData.ADC_[3];
-	NTC = gData.ADC_[0];
+	//rt_thread_delay( RT_TICK_PER_SECOND/1000);
+	PT  = gData.ADC_[4];
+	NTC = gData.ADC_[3];
 	//format:0t:NNNNPPPP
 	sprintf(str_buffer, "0t:%04x%04x",NTC,PT);
 	print2usb(str_buffer);
 	//printf(str_buffer);
 	//return to origin status
-	if (status == SW_R)
-		switch_R();
-	else if (status == SW_UI)
-		switch_UI();
-	else if (status == SW_NTC)
-		switch_NTC();
-	else if (status == SW_CAN)
-		switch_CAN();
-	else if (status == SW_485)
-		switch_485();
-	else if (status == SW_232)
-		switch_232();
-	else
-		switch_R();
 }
 
 
@@ -579,7 +505,7 @@ __IO function_t gAdc[8]={
 	{"stop",data_t_stop},// "adc:stop:\r" to clear running_flag
 	{"cfg",data_t_cfg},// "adc:cfg:auto:Y\r" to clear manual_flag
 	{"swt",switch_RAT},// "adc:swt:R|U|I|NTC|CAN|232|485:\r" to switch to R input_mode
-	{"pga",pga_set},// "adc:pga:set:R|A|B:xxx\r" to set pga R|A|B value
+	{"pga",pga_set},// "adc:pga:set:R|A|r:xxx:a:xxx\r" to set pga R|A|B value
 	{"temp",get_temp},// "adc:temp:\r" to get temprature
 	{0,0},// "adc:cfg:auto:N\r" to set manual_flag
 };

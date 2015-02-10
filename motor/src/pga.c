@@ -30,21 +30,10 @@
 
 #define STABLE 8000
 
-int stable_time=1200;
+int stable_time=4000;
 pga_t gPGA_ports={
-	{ {GPIOA,GPIO_Pin_6},	// R.clk
-	  {GPIOA,GPIO_Pin_7}	// R.dat
-	},
-
-	{ {GPIOB,GPIO_Pin_0},	// A.clk
-	  {GPIOB,GPIO_Pin_1}	// A.dat
-	},
-
-	{ {GPIOB,GPIO_Pin_10},	// B.clk
-	  {GPIOB,GPIO_Pin_11}	// B.dat
-	},
-	{ {GPIOC,GPIO_Pin_14},	// sw.clk
-	  {GPIOC,GPIO_Pin_13}	// sw.dat
+	{ {GPIOB,GPIO_Pin_12},	// clk
+	  {GPIOB,GPIO_Pin_13}	// dat
 	},
 
 };
@@ -63,17 +52,25 @@ void GPIO_pga_init(void)
 	int i,j;
 	
 	sp_port_t* pSPort = (sp_port_t*)&gPGA_ports;
-	for(i=0;i<4;i++){
-		port_pin_t* pPin = (port_pin_t*) pSPort;
-		for(j=0;j<2;j++){
-			GPIO_InitStructure.GPIO_Pin = pPin->pin ;
-			GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-			GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-			GPIO_Init(pPin->port, &GPIO_InitStructure);
-			pPin++;
-		}
-		pSPort++;	
+	//for(i=0;i<4;i++){
+	//	port_pin_t* pPin = (port_pin_t*) pSPort;
+	//	for(j=0;j<2;j++){
+	//		GPIO_InitStructure.GPIO_Pin = pPin->pin ;
+	//		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	//		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	//		GPIO_Init(pPin->port, &GPIO_InitStructure);
+	//		pPin++;
+	//	}
+	//	pSPort++;	
+	port_pin_t* pPin = (port_pin_t*) pSPort;
+	for(j=0;j<2;j++){
+	      GPIO_InitStructure.GPIO_Pin = pPin->pin ;
+	      GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	      GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	      GPIO_Init(pPin->port, &GPIO_InitStructure);
+	      pPin++;
 	}
+//}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -93,21 +90,24 @@ void delay(int ticks)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-int write_sport(sp_port_t * pSPort, uint8_t value)
+int write_sport(sp_port_t * pSPort, uint32_t value)
 {
 	rt_kprintf("pga writed..!\r\n");
 	int i = 0;
-	for (i=0;i<8;i++){
+	for (i=0;i<24;i++){
 		GPIO_ResetBits(pSPort->clk_pin.port, pSPort->clk_pin.pin);
-		delay(stable_time);
-		if (value&0x80){
+		delay_loop(stable_time);
+		//delay(stable_time);
+		if (value&0x00800000){
 			GPIO_SetBits(pSPort->dat_pin.port, pSPort->dat_pin.pin);
 		}else{
 			GPIO_ResetBits(pSPort->dat_pin.port, pSPort->dat_pin.pin);
 		}
-		delay(stable_time);
+		delay_loop(stable_time);
+		//delay(stable_time);
 		GPIO_SetBits(pSPort->clk_pin.port, pSPort->clk_pin.pin);
-		delay(stable_time);
+		delay_loop(stable_time);
+		//delay(stable_time);
 		value = value<<1;
 	}
 }
@@ -115,25 +115,32 @@ int write_sport(sp_port_t * pSPort, uint8_t value)
 
 int pga_set(char* cmd)// set minimum circle to aoid speed_lost 
 {
-	uint16_t value;
-	sp_port_t* pSPort;
-	value= atoi(cmd+2); // 'pga:set:R:xxx' to set R sport
+	__IO static uint32_t value=0;
+	uint32_t value_R=0;
+	uint32_t value_A=0;
+	unsigned char *pA;
+	sp_port_t* pSPort = &(gPGA_ports.R);
 	switch (*cmd){
 		case 'R':
 			rt_kprintf("pga_R setted...!\r\n");
-			pSPort = &(gPGA_ports.R);
+			value_R= atoi(cmd+2); // 'pga:set:R:xxx' to set R sport
+			value_R ^= 0xffffffff;
+			value &=0xff0000ff;
+			value |= (value_R<<8);
 			break;
 		case 'A' :
 			rt_kprintf("pga_A setted...!\r\n");
-			pSPort = &(gPGA_ports.A);
+			value_A= atoi(cmd+2); // 'pga:set:R:xxx' to set R sport
+			value &=0xffffff00;
+			value |= value_A;
 			break;
-		case 'B': 
-			rt_kprintf("pga_B setted...!\r\n");
-			pSPort = &(gPGA_ports.B);
-			break;
-		case 'S': 
-			rt_kprintf("pga_S setted...!\r\n");
-			pSPort = &(gPGA_ports.SW);
+		case 'r': 
+			value_R= atoi(cmd+2); // 'pga:set:R:xxx' to set R sport
+			pA = strchr(cmd,'a');
+			value_A= atoi(pA+2);
+			value_R ^= 0xffffffff;
+			value = (value_R<<8)|value_A;
+			rt_kprintf("pga_R&A setted...!\r\n");
 			break;
 		default:
 			rt_kprintf("pga bad parameter ...! should be R|A|B \r\n");
