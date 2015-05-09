@@ -41,27 +41,22 @@ port_pin_t gCounter_Pin={//Tim3 ch2, alt-funtion remap on GPIOB5
 
 port_pin_t gCounter_DirPin={
 	GPIOB,
-	GPIO_Pin_12,
+	GPIO_Pin_7,
 };
 extern volatile pwm_t gPWM1;
 
 int status_tim3 = 0;
 void TIM2_IRQHandler( void)
 {
+	__IO uint8_t dir;
 	TIM2->SR &= ~(1<<0); // clear UIF flag
 	TIM_ClearFlag(TIM2,TIM_FLAG_Update);
 	TIM_ClearITPendingBit(TIM2 , TIM_FLAG_Update);
-	gData.counter1++;
-	if (gPWM1.running_flag == FORWARD)
+	dir = GPIO_ReadInputDataBit(gCounter_DirPin.port,gCounter_DirPin.pin);
+	if (dir == Bit_SET)
 		gData.counter1++;
-	else if  (gPWM1.running_flag == BACKWARD)
-		gData.counter1--;
-	status_tim3++;
-	status_tim3%=2;
-	if (status_tim3==1)
-		rt_hw_led_on(0);
 	else
-		rt_hw_led_off(0);
+		gData.counter1--;
 	//gData.sample();
 }
 
@@ -96,10 +91,10 @@ void  tim2_init(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(gCounter_Pin.port, &GPIO_InitStructure);
 	
-	//GPIO_InitStructure.GPIO_Pin = gCounter_DirPin.pin;  
-	//GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-	//GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	//GPIO_Init(gCounter_DirPin.port, &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = gCounter_DirPin.pin;  
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(gCounter_DirPin.port, &GPIO_InitStructure);
 
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 	/*供给系统时钟*/

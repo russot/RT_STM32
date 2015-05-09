@@ -35,9 +35,14 @@ class Serial_writer(threading.Thread):
 
 		print "write start..\n", self.serial
 		count =0
+		self.serial.write("adc:swt:U")
+		time.sleep(0.01)
+		print "swt:U"
+		os.system("pause")
 		self.serial.write("adc:swt:R")
 		time.sleep(0.01)
 		print "swt:R"
+		os.system("pause")
 	#	print "pga: R=64"
 	#	self.serial.write("adc:pga:A:2")
 	#	time.sleep(0.1)
@@ -71,66 +76,65 @@ class Serial_writer(threading.Thread):
 	#	time.sleep(0.1)
 	#	print "pga: A=2"
 	#	os.system("pause")
-		self.serial.write("adc:swt:R")
-		time.sleep(0.1)
-		print "adc:swt:R"
+	#	self.serial.write("adc:swt:R")
+	#	time.sleep(0.1)
+	#	print "adc:swt:R"
+	#	os.system("pause")
+	#	self.serial.write("adc:pga:r:32:a:8")
+	#	time.sleep(0.1)
+	#	print "pga: adc:pga:r:0x20:a:0x8"
+	#	os.system("pause")
+	#	self.serial.write("adc:pga:r:0:a:0")
+	#	time.sleep(0.1)
+	#	print "pga: adc:pga:r:0:a:0"
+	#	os.system("pause")
+	#	self.serial.write("adc:pga:R:65280")
+	#	time.sleep(0.1)
+	#	print "pga: adc:pga:R:65280"
+	#	os.system("pause")
+	#	self.serial.write("adc:pga:R:255")
+	#	time.sleep(0.1)
+	#	print "pga: adc:pga:R:255"
+	#	os.system("pause")
+	#	time.sleep(0.1)
+	#	os.system("pause")
+	#	self.serial.write("adc:pga:r:65280:a:240")
+	#	time.sleep(0.1)
+	#	print "pga: adc:pga:r:65280:a:240"
+	#	os.system("pause")
+	#	self.serial.write("adc:swt:U")
+	#	time.sleep(0.1)
+	#	print "adc:swt:U"
+	#	os.system("pause")
+	#	self.serial.write("adc:swt:I")
+	#	time.sleep(0.1)
+	#	print "adc:swt:I"
+	#	os.system("pause")
+	#	self.serial.write("adc:swt:C")
+	#	time.sleep(0.1)
+	#	print "adc:swt:C"
+	#	os.system("pause")
+	#	self.serial.write("adc:swt:4")
+	#	time.sleep(0.1)
+	#	print "adc:swt:4"
+	#	os.system("pause")
+	#	self.serial.write("adc:swt:2")
+	#	time.sleep(0.1)
+	#	print "adc:swt:2"
+	#	os.system("pause")
 		os.system("pause")
-		self.serial.write("adc:pga:r:255:a:128")
-		time.sleep(0.1)
-		print "pga: adc:pga:r:255:a:0"
-		os.system("pause")
-		self.serial.write("adc:pga:r:8:a:0")
-		time.sleep(0.1)
-		print "pga: adc:pga:r:8:a:0"
-		os.system("pause")
-		self.serial.write("adc:pga:R:65280")
-		time.sleep(0.1)
-		print "pga: adc:pga:R:65280"
-		os.system("pause")
-		self.serial.write("adc:pga:R:255")
-		time.sleep(0.1)
-		print "pga: adc:pga:R:255"
-		os.system("pause")
-		time.sleep(0.1)
-		os.system("pause")
-		self.serial.write("adc:pga:r:65280:a:240")
-		time.sleep(0.1)
-		print "pga: adc:pga:r:65280:a:240"
-		os.system("pause")
-		self.serial.write("adc:swt:U")
-		time.sleep(0.1)
-		print "adc:swt:U"
-		os.system("pause")
-		self.serial.write("adc:swt:I")
-		time.sleep(0.1)
-		print "adc:swt:I"
-		os.system("pause")
-		self.serial.write("adc:swt:C")
-		time.sleep(0.1)
-		print "adc:swt:C"
-		os.system("pause")
-		self.serial.write("adc:swt:4")
-		time.sleep(0.1)
-		print "adc:swt:4"
-		os.system("pause")
-		self.serial.write("adc:swt:2")
-		time.sleep(0.1)
-		print "adc:swt:2"
-		os.system("pause")
-		self.serial.write("adc:cfg:manual:Y")
-		time.sleep(0.01)
-		self.serial.write("adc:cfg:interval:8000")
 		time.sleep(0.01)
 		self.serial.write("adc:cfg:channel:0") #channel_3 is PT1000_Vout
 		time.sleep(0.01)
-		os.system("pause")
-		time.sleep(0.1)
 		print "adc:swt:R"
-		os.system("pause")
-		self.serial.write("adc:pga:r:240:a:16")
+		self.serial.write("adc:pga:r:8:a:16")
 		time.sleep(0.1)
-		print "pga: adc:pga:r:240:a:16"
-		os.system("pause")
+		print "adc:pga:r:8:a:16"
+		self.serial.write("adc:run:\r")
+		time.sleep(0.1)
+		self.serial.write("vout:set:800:")
+		time.sleep(0.1)
+		self.serial.write("adc:temp:\r")
 		time.sleep(330.01)
 		while True:
 			time.sleep(0.1)
@@ -161,14 +165,15 @@ class Serial_reader(threading.Thread):
 			for x in raw_:
 				raw_bytes +=chr(x)
 			#self.output(raw_bytes)
-			#print raw_bytes
+			#print raw_bytes[:7]
 			#if raw_bytes.startswith('0x:'):
 			datas = struct.unpack('30H', str(raw_bytes)[4:64])
 			out = '0x:'
 			for data in datas:
 				out += '%04x'%data
 			print >> self.logfile,out
-			print out
+			if raw_bytes.startswith("0x:"):
+				print out
 
 
 			self.count +=1
@@ -192,8 +197,8 @@ class Serial_reader(threading.Thread):
 			#	print "%d"%count, out
 			#except:
 			#	pass
-			if self.count == 8000:
-				break
+			#if self.count == 8000:
+			#	break
 		print "%d records runs for %d seconds"% (self.count, time.time() - begin)
 		#print "%d 运行了%d秒 "% (self.count, time.time() - begin)
 

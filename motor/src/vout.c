@@ -28,7 +28,7 @@
 #define STABLE 8000
 
 #define INIT_CIRCLE 6000
-#define MIN_PULSE 2000
+#define MIN_PULSE 1000
 
 port_pin_t vout={GPIOA,GPIO_Pin_8};
 ///////////////////////////////////////////////////////////////////////////////////

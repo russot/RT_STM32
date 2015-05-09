@@ -237,6 +237,7 @@ int cmd_dealer_init(void)
 }
 
 
+void sample_vout(void);
 /////////////////////////////////////////////////////////////////////////
 __IO rt_uint8_t cmd_stack[512];
 __IO struct rt_thread cmd_thread;
@@ -250,8 +251,9 @@ __IO void cmd_thread_entry(void* parameter)
 		if  ( gCmd_dealer.has_cmd() ) 
 			gCmd_dealer.deal_cmd();
 		else{
-			rt_thread_yield();
+			//rt_thread_yield();
 			rt_thread_delay(RT_TICK_PER_SECOND/100);
+			sample_vout();
 			continue;
 		}
 	}

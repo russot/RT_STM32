@@ -212,7 +212,6 @@ void data_t_format(void)
 void data_t_reset(void)
 {
 	gData.counter1 = 0 ;
-	gData.ad_buffer.current = &(gData.ad_buffer._buffer[0].slot[2]); //'0x::.......................'
 	TIM_SetCounter(TIM2,0);
 }
 #define _A0 gData.ADC_sample[0]
@@ -221,9 +220,9 @@ void data_t_reset(void)
 #define _A3 gData.ADC_sample[3]
 #define OVER_FLOW(x)  ((x & 0xfff)==0xfff)
 #define NOT_OVER_FLOW(x)  ((x & 0xfff)!=0xfff)
-#define filter_size 50
+#define filter_size 1
 //uint16_t filter_buffer[filter_size];
-#define SMP_DELAY 10
+#define SMP_DELAY 30
 #define DATA0_ADDR &(gData.ad_buffer._buffer[gData.ad_buffer.head].slot[2])
 #define DATAn_ADDR &(gData.ad_buffer._buffer[gData.ad_buffer.head].slot[29])
 #define VALUEX *(gData.ad_buffer.current + 0)
@@ -231,31 +230,55 @@ void data_t_reset(void)
 #define COUNT  *(gData.ad_buffer.current + 2)
 uint16_t last_Yvalue=0;
 void data_t_sample(void) {
-	int i;
-	uint32_t sum;
-	uint32_t signal;
-	uint8_t channel;
-	uint8_t x10_flag;
-	uint16_t current_Yvalue;
-	
-	if (gData.channel ==0 && gData.ADC_[1] < 0xfff){
-		channel =  1;
-		x10_flag = SET_;
-	}else{
-		channel = gData.channel;
-		x10_flag = UNSET_;
-	}
-	sum = 0;
-	for (i=0;i<filter_size;i++){
-		sum +=  (gData.ADC_[channel] & 0xfff); // sampling data from DMA-memory area gData.ADC_
-		delay_loop(SMP_DELAY); // delay sometime for next sample
-	}
-	if (x10_flag==SET_)
-		current_Yvalue = (sum / filter_size) | (0x1<<15);
-	else
-		current_Yvalue = (sum / filter_size) ;
-	if (abs(current_Yvalue-last_Yvalue) > 2 || COUNT > 256){ // new value 
-		gData.ad_buffer.current += 3; //point to  next item
+//	int i;
+//	uint32_t sum;
+//	uint32_t signal;
+//	uint8_t channel;
+//	uint8_t x10_flag;
+//	uint16_t current_Yvalue;
+//	
+//	if (gData.channel ==0 && gData.ADC_[1] < 0xfff){
+//		channel =  1;
+//		x10_flag = SET_;
+//	}else{
+//		channel = gData.channel;
+//		x10_flag = UNSET_;
+//	}
+//	sum = 0;
+//	for (i=0;i<filter_size;i++){
+//		sum +=  (gData.ADC_[channel] & 0xfff); // sampling data from DMA-memory area gData.ADC_
+//		delay_loop(SMP_DELAY); // delay sometime for next sample
+//	}
+//	if (x10_flag==SET_)
+//		current_Yvalue = (sum / filter_size) | (0x1<<15);
+//	else
+//		current_Yvalue = (sum / filter_size) ;
+//	if (abs(current_Yvalue-last_Yvalue) > 1 || COUNT > 1024){ // new value 
+//		gData.ad_buffer.current += 3; //point to  next item
+//		if ( (gData.ad_buffer.current > DATAn_ADDR)  ){ // one slot stuffed
+//			gData.ad_buffer.head += 1;// first,adjust  write_slot 
+//			if (gData.ad_buffer.head == AD_BUFF_LEN)
+//				gData.ad_buffer.head = 0;
+//			gData.ad_buffer.current = DATA0_ADDR; // second, adjust write_head(index)
+//			gData.need_upload_flag = SET_;  // set flag to start upload later
+//		}
+//		if(gData.manual_flag == SET_){// set current  length
+//			*(gData.ad_buffer.current) = 0xffff; // manual mode, set to 0 
+//		}else{
+//			*(gData.ad_buffer.current) = gData.counter1; // auto mode, set to pulse counter 
+//		}
+//		VALUEY = current_Yvalue;
+//		COUNT  = 1; //for new value , set count to 1
+//	}else{
+//		//VALUEY = current_Yvalue;
+//		COUNT += 1; //for new value , set count to 1
+//	}
+//	last_Yvalue = current_Yvalue;
+		*(gData.ad_buffer.current + 0) = (gData.ADC_[0] & 0xfff); 
+		*(gData.ad_buffer.current + 1) = (gData.ADC_[1] & 0xfff); 
+		*(gData.ad_buffer.current + 2) = (gData.ADC_[2] & 0xfff); 
+		*(gData.ad_buffer.current + 3) = (gData.ADC_[3] & 0xfff); 
+		gData.ad_buffer.current += 4; //point to  next item
 		if ( (gData.ad_buffer.current > DATAn_ADDR)  ){ // one slot stuffed
 			gData.ad_buffer.head += 1;// first,adjust  write_slot 
 			if (gData.ad_buffer.head == AD_BUFF_LEN)
@@ -263,18 +286,6 @@ void data_t_sample(void) {
 			gData.ad_buffer.current = DATA0_ADDR; // second, adjust write_head(index)
 			gData.need_upload_flag = SET_;  // set flag to start upload later
 		}
-		if(gData.manual_flag == SET_){// set current  length
-			*(gData.ad_buffer.current) = 0xffff; // manual mode, set to 0 
-		}else{
-			*(gData.ad_buffer.current) = gData.counter1; // auto mode, set to pulse counter 
-		}
-		VALUEY = current_Yvalue;
-		COUNT  = 1; //for new value , set count to 1
-	}else{
-		VALUEY = current_Yvalue;
-		COUNT += 1; //for new value , set count to 1
-	}
-	last_Yvalue = current_Yvalue;
 }
 
 // loop buffer init
@@ -304,6 +315,7 @@ void data_t_init(void){
 	gData.channel= 0;
 	gData.reset  = data_t_reset;
 	gData.reset();
+	gData.ad_buffer.current = &(gData.ad_buffer._buffer[0].slot[2]); //'0x::.......................'
 	//gData.str_buffer[0] = 0x7830; //0x
 	//gData.str_buffer[1] = 0x3a3a; //::
 	gData.delay= 1;
@@ -428,6 +440,7 @@ void adc_config(void)
 	// pga and switch init here
 	pga_init();
 	swR_init();
+	sw_U;
 	//status_init();
 
 	/* ADC1 configuration ------------------------------------------------------*/
@@ -475,34 +488,53 @@ void get_temp(void)
 }
 
 
+#define Thermo_Filter_Size 1
 void sample_temp(void)
 {
-
-	int PT,NTC,status;
+	static int count=0;
+	static int sum_PT=0;
+	static int sum_NTC=0;
 	char str_buffer[64];
 	if ( gThermo_flag==UNSET_)
-		return
+		return ;
 	gThermo_flag=UNSET_;
-	status = gSW_status;
 	//switch_NTC();
  	/*Warning: sleep 1ms to be stable */
 	//rt_thread_delay( RT_TICK_PER_SECOND/1000);
-	PT  = gData.ADC_[4];
-	NTC = gData.ADC_[3];
-	//format:0t:NNNNPPPP
-	sprintf(str_buffer, "0t:%04x%04x",NTC,PT);
-	print2usb(str_buffer);
-	//printf(str_buffer);
-	//return to origin status
+	count += 1;
+	sum_PT  += gData.ADC_[4] & 0xfff;
+	sum_NTC += gData.ADC_[3] & 0xfff;
+	if (count == Thermo_Filter_Size){
+		sprintf(str_buffer, "0t:%04x%04x",sum_NTC/Thermo_Filter_Size ,sum_PT/Thermo_Filter_Size);
+		print2usb(str_buffer);
+		sum_PT=0;
+		sum_NTC=0;
+		count=0;
+	}
 }
 
+#define Vout_Filter_Size 8
+void sample_vout(void)
+{
+	static int count=0;
+	static int sum=0;
+	char str_buffer[64];
+	sum   += gData.ADC_[5]&0xfff;
+	count += 1;
+	if (count == Vout_Filter_Size){
+		sprintf(str_buffer, "0v:%04x%04x",sum/count,gData.ADC_[4]&0xfff);
+		print2usb(str_buffer);
+		sum = 0;
+		count = 0;
+	}
+}
 
 int pga_set(char* cmd);
 
 __IO function_t gAdc[8]={
-	{"sample",data_t_sample},// "adc:sample:\r" to sample
-	{"run",data_t_run },// "adc:run:\r" to set running_flag
-	{"stop",data_t_stop},// "adc:stop:\r" to clear running_flag
+	{"sample",data_t_sample},// "adc:sample:\r" to sample {"run",data_t_run },// "adc:run:\r" to set running_flag
+	{"stop",data_t_stop},// "adc:stop:\r" to unset running_flag
+	{"run",data_t_run},// "adc:run:\r" to set running_flag
 	{"cfg",data_t_cfg},// "adc:cfg:auto:Y\r" to clear manual_flag
 	{"swt",switch_RAT},// "adc:swt:R|U|I|NTC|CAN|232|485:\r" to switch to R input_mode
 	{"pga",pga_set},// "adc:pga:set:R|A|r:xxx:a:xxx\r" to set pga R|A|B value

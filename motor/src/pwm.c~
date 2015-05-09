@@ -35,7 +35,7 @@ pwm_t gPWM1 ={
 	{GPIOB, GPIO_Pin_3},	// pwm out(TIM2.OC2) maps to GPIOB3
 	{GPIOB, GPIO_Pin_4},	// pwm dir maps to GPIOB4
 	{GPIOB, GPIO_Pin_6},	// pwm zero maps to GPIO6
-	{GPIOB, GPIO_Pin_7},// pwm pollar maps to GPIOB7
+	{GPIOB, GPIO_Pin_6},// pwm pollar maps to GPIOB7
 	TIM2,	// TIM2.OC2 maps to GPIOB.Pin3
 	STOPPED,
 	UNSET_,
@@ -55,26 +55,26 @@ void exti_init(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(gPWM1.zero_pin.port, &GPIO_InitStructure);
 	
-	GPIO_InitStructure.GPIO_Pin = gPWM1.pollar_pin.pin; //configure pollar_pin
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(gPWM1.pollar_pin.port, &GPIO_InitStructure);
+	//GPIO_InitStructure.GPIO_Pin = gPWM1.pollar_pin.pin; //configure pollar_pin
+	//GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	//GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	//GPIO_Init(gPWM1.pollar_pin.port, &GPIO_InitStructure);
 
 
-//	EXTI_InitTypeDef EXTI_InitStruct;
-//	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB,GPIO_PinSource4);
-//	EXTI_InitStruct.EXTI_Line = EXTI_Line4;
-//	EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
-//	EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
-//	EXTI_InitStruct.EXTI_LineCmd = ENABLE;
-//	EXTI_Init(&EXTI_InitStruct);
-//
-//	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA,GPIO_PinSource15);
-//	EXTI_InitStruct.EXTI_Line = EXTI_Line15;
-//	EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
-//	EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
-//	EXTI_InitStruct.EXTI_LineCmd = ENABLE;
-//	EXTI_Init(&EXTI_InitStruct);
+	EXTI_InitTypeDef EXTI_InitStruct;
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB,GPIO_PinSource6);
+	EXTI_InitStruct.EXTI_Line = EXTI_Line6;
+	EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+	EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+	EXTI_InitStruct.EXTI_LineCmd = ENABLE;
+	EXTI_Init(&EXTI_InitStruct);
+
+	//GPIO_EXTILineConfig(GPIO_PortSourceGPIOA,GPIO_PinSource7);
+	//EXTI_InitStruct.EXTI_Line = EXTI_Line7;
+	//EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+	//EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+	//EXTI_InitStruct.EXTI_LineCmd = ENABLE;
+	//EXTI_Init(&EXTI_InitStruct);
 
 
 	/* Configure the NVIC Preemption Priority Bits */  
@@ -83,18 +83,18 @@ void exti_init(void)
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0;
 	/* Enable the TIM3 Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel =TIM3_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
 	/* Enable the EXTI3 Interrupt */
-	NVIC_InitStructure.NVIC_IRQChannel =EXTI15_10_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure);
+	//NVIC_InitStructure.NVIC_IRQChannel =EXTI15_10_IRQn;
+	//NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
+	//NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	//NVIC_Init(&NVIC_InitStructure);
 
-	/* Enable the EXTI4 Interrupt */
-	NVIC_InitStructure.NVIC_IRQChannel =EXTI4_IRQn;
+	/* Enable the EXTI9_5 Interrupt */
+	NVIC_InitStructure.NVIC_IRQChannel =EXTI9_5_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
@@ -119,10 +119,10 @@ uint8_t middle_status_update(void)
 	uint8_t status_middle = UNSET_;
 	if ( (status_zero!=Bit_SET) && (status_pollar!=Bit_SET) ){
 		status_middle = SET_;
-		middle_Y_led();
+		//middle_Y_led();
 	}else{
 		status_middle = UNSET_;
-		middle_N_led();
+		//middle_N_led();
 	}
 	return status_middle;
 
@@ -159,44 +159,40 @@ __IO rt_uint8_t event_stack[ 512 ];
 __IO struct rt_thread event_thread;
 __IO void event_thread_entry(void* parameter)
 {
-	//exti_init();
+	exti_init();
 	pwm_init();
 	middle_status_update();
 	while (1){
 		pollar_service();
-		gData.service();
+		gData.service(); // upload ad data
 		rt_thread_yield();
 	//	printf("evt server...\r\n");
 	}
 }
 
 /**********************************************************/
-void EXTI15_10_IRQHandler(void)
-{
-	if ( EXTI->PR & EXTI_Line15){
-		EXTI->PR = EXTI_Line15;
-		pollar_flag = SET_;
-		if (middle_status_update() == SET_ )
-			gData.reset();
-	}
-}
+//void EXTI15_10_IRQHandler(void)
+//{
+//	if ( EXTI->PR & EXTI_Line15){
+//		EXTI->PR = EXTI_Line15;
+//		pollar_flag = SET_;
+//		if (middle_status_update() == SET_ )
+//			gData.reset();
+//	}
+//}
 
 /**********************************************************/
-void EXTI4_IRQHandler(void)
+void EXTI9_5_IRQHandler(void)
 {
-	if ( EXTI->PR & EXTI_Line4){
-		EXTI->PR = EXTI_Line4;
-		zero_flag = SET_;
-		if (middle_status_update() == SET_ )
-			gData.reset();
-	}
+	EXTI->PR = EXTI_Line6;
+	gData.reset();
 }
 
 void  pwm_init(void) // use TIM4 as pwm
 {
 }
 /**********************************************************/
-void  pwm_init_(void) // use TIM4 as pwm
+void  pwm_init_(void) // use TIM2 as pwm
 {
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
